@@ -114,7 +114,7 @@ class Query:
                 "ForSaleForeclosure",
                 "RecentlySold"
             ]] = {"ForSaleByAgent", "ForSaleByOwner", "NewConstruction", "ComingSoon", "Auction", "ForSaleForeclosure"},
-            solid_in_last_x_days: Union[None, int] = None,
+            sold_in_last_x_days: Union[None, int] = None,
             price_max: Union[None, int] = None,
             price_min: Union[None, int] = None,
             monthly_payment_max: Union[None, int] = None,
@@ -154,7 +154,35 @@ class Query:
             year_built_start: Union[None, int] = None,
             year_built_end: Union[None, int] = None,
             keywords: Set[str] = set(),
-    ):
+    ) -> 'Query':
+        """This sets the filter_state based on the parameters given. This is used for the same purpose as set_filter but this is easier to use.
+
+        Args:
+            for_sale (bool, optional): If should search for sales, if set to False will search for rentals. Note that sale_options do not apply to rentals and will be ignored. Defaults to True.
+            all_homes (bool, optional): TODO determine the affect of this param. Defaults to True.
+            sale_options (Set[Literal[ &quot;ForSaleByAgent&quot;, &quot;ForSaleByOwner&quot;, &quot;NewConstruction&quot;, &quot;ComingSoon&quot;, &quot;Auction&quot;, &quot;ForSaleForeclosure&quot;, &quot;RecentlySold&quot; ]], optional): Sale options. Defaults to {"ForSaleByAgent", "ForSaleByOwner", "NewConstruction", "ComingSoon", "Auction", "ForSaleForeclosure"}.
+            sold_in_last_x_days (Union[None, int], optional): For looking for already sold houses that have been sold in the last X. Note that this requires 'RecentlySold' in the sale options. This also has no affect if for_sale is False. Defaults to None.
+            price_max (Union[None, int], optional): The max price. Defaults to None.
+            price_min (Union[None, int], optional): The min price. Defaults to None.
+            monthly_payment_max (Union[None, int], optional): The monthly payment max. Defaults to None.
+            monthly_payment_min (Union[None, int], optional): The monthly payment min. Defaults to None.
+            beds (Union[None, int], optional): The minimum number of beds. Defaults to None.
+            baths (Union[None, int], optional): The minimum number of baths. Defaults to None.
+            home_type (Set[Literal[ &quot;SingleFamily&quot;, &quot;Townhouse&quot;, &quot;MultiFamily&quot;, &quot;Condo&quot;, &quot;LotLand&quot;, &quot;Apartment&quot;, &quot;Manufactured&quot;, &quot;ApartmentOrCondo&quot;, ]], optional): _description_. Defaults to {"SingleFamily", "Townhouse", "MultiFamily", "Condo", "LotLand", "Apartment", "Manufactured", "ApartmentOrCondo"}.
+            hoa (Union[None, int], optional): Types of homes to include. Defaults to None.
+            parking_spots (Union[None, int], optional): Minimum number of parking spots. Defaults to None.
+            features (Set[Literal[ &quot;Garage&quot;, &quot;BasementFinished&quot;, &quot;BasementUnfinished&quot;, &quot;SingleStory&quot;, &quot;AgeRestricted55Plus&quot;, &quot;AirConditioning&quot;, &quot;Pool&quot;, &quot;Waterfront&quot;, &quot;CityView&quot;, &quot;ParkView&quot;, &quot;MountainView&quot;, &quot;WaterView&quot;, ]], optional): Required features for houses to have in results. Defaults to set().
+            house_sqft_max (Union[None, int], optional): House sqft max. Defaults to None.
+            house_sqft_min (Union[None, int], optional): House sqft min. Defaults to None.
+            lot_sqft_max (Union[None, int], optional): Lot sqft max. Defaults to None.
+            lot_sqft_min (Union[None, int], optional): Lot sqft min. Defaults to None.
+            year_built_start (Union[None, int], optional): Year built min. Defaults to None.
+            year_built_end (Union[None, int], optional): Year built max. Defaults to None.
+            keywords (Set[str], optional): Search keywords. Defaults to set().
+
+        Returns:
+            'Query': Returns self
+        """
 
         # TODO refactor export logic to helpers and constants
 
@@ -163,14 +191,17 @@ class Query:
         if for_sale:
 
             possible_sale_options = {"ForSaleByAgent", "ForSaleByOwner", "NewConstruction",
-                                     "ComingSoon", "Auction", "ForSaleForeclosure", "RecentlySold"}
+                                     "ComingSoon", "Auction", "ForSaleForeclosure"}
 
             diff = possible_sale_options - set(sale_options)
             for opt in diff:
                 filter_state[f"is{opt}"] = {"value": False}
 
-            if solid_in_last_x_days:
-                filter_state["doz"] = {"value": str(solid_in_last_x_days)}
+            if "RecentlySold" in sale_options:
+                filter_state["isRecentlySold"] = {"value": True}
+
+                if sold_in_last_x_days:
+                    filter_state["doz"] = {"value": str(sold_in_last_x_days)}
 
         else:
             filter_state["isForRent"] = True
