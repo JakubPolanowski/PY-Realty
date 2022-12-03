@@ -321,6 +321,34 @@ class Query:
         self.wants = wants
         return self
 
+    def set_custom_region(self, region: str, url: str = defaults.URL, headers: Dict = defaults.HEADER) -> 'Query':
+        """Sets a custom region to limit query results to. This is accomplished by sending a POST request to Zillow with the region string.
+
+        Args:
+            region (str): A string of longitudes and latitudes in the format of 'long1,lat1|long2,lat3|...|long1,lat1'. Note that the last pair of longitude and latitude values should be the same the the first.
+            url (str, optional): The zillow URL for the POST request. The default can be found within defaults.py within the Zillow module.
+            headers (Dict, optional): The headers sent with the POST request. The default can be found within defaults.py within the Zillow module.
+
+        Returns:
+            Query: Returns self
+        """
+        payload = f"-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"clipPolygon\"\r\n\r\n{region}\r\n-----011000010111000001101001--\r\n"
+
+        response = requests.request("POST", url, data=payload, headers=headers)
+        region_id = response.json()["customRegionId"]
+
+        self.sub_parms["customRegionId"] = region_id
+        return self
+
+    def clear_custom_region(self) -> 'Query':
+        """Clears the custom region ID from the query.
+
+        Returns:
+            Query: Returns self
+        """
+        self.sub_parms.pop("customRegionId")
+        return self
+
     def clear_filter(self) -> 'Query':
         """Clears the filter state.
 
