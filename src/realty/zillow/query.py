@@ -370,19 +370,28 @@ class Query:
             "wants": json.dumps(self.wants)
         }
 
-    def get_response(self, url: str = defaults.URL, headers: Dict = defaults.HEADER):
+    def get_response(self, returns: Literal["request", "full", "results"] = "request", url: str = defaults.URL, headers: Dict = defaults.HEADER) -> Any:
         """Returns the requests response object for the query with the configured params
 
         Args:
+            returns ('request' | 'full' | 'results'): Sets what this should return, request -> request return object, 'full' -> full response json, 'results' -> search results list. Defaults to 'request'.
             url (str, optional): The Zillow URL for the API request. The default can be found within defaults.py within the Zillow module
             headers (Dict, optional): The headers parameters as a dictionary. The Defaults can be found within defaults.py within the Zillow module.
 
         Returns:
-            _type_: _description_
+            Any: Returns either a requests response object or dict or list. This is dependent on the returns parameter.
         """
-        return requests.request(
+
+        r = requests.request(
             "GET",
             url,
             headers=headers,
             params=self.get_params_string()
         )
+
+        if returns == "request":
+            return r
+        if returns == "full":
+            return r.json()
+        if returns == "results":
+            return r.json().get('searchResults').get('listResults')
