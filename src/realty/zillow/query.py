@@ -34,6 +34,7 @@ class Query:
             Query: Returns self
         """
         self.sub_parms["pagination"] = {"currentPage": current_page}
+        return self
 
     def set_search_term(self, term: str) -> 'Query':
         """Sets the query search term.
