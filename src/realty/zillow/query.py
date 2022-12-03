@@ -321,6 +321,15 @@ class Query:
         self.wants = wants
         return self
 
+    def clear_filter(self) -> 'Query':
+        """Clears the filter state.
+
+        Returns:
+            Query: Returns self
+        """
+        self.sub_parms["filterState"] = {}
+        return self
+
     def get_params_string(self) -> str:
         """Generates the parameters JSON string according to the values set within the query
 
