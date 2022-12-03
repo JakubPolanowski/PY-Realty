@@ -394,4 +394,4 @@ class Query:
         if returns == "full":
             return r.json()
         if returns == "results":
-            return r.json().get('searchResults').get('listResults')
+            return r.json().get("cat1").get('searchResults').get('listResults')
