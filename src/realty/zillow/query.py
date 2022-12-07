@@ -16,7 +16,6 @@ class Query:
             "pagination": {"currentPage": 1},
             "isMapVisible": "true",
             "isListVisible": "true",
-            "mapZoom": 11,
         }
 
         self.wants = {
@@ -98,8 +97,7 @@ class Query:
             Query: Returns self
         """
 
-        self.sub_parms["filterState"] = {
-            k: {"value": v} for k, v in filter_dict.items()}
+        self.sub_parms["filterState"] = filter_dict
         return self
 
     def set_filter_preset(
