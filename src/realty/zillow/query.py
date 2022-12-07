@@ -185,7 +185,7 @@ class Query:
 
         # TODO refactor export logic to helpers and constants
 
-        filter_state = {"isAllHomes": all_homes}
+        filter_state = {"isAllHomes": {"value": all_homes}}
 
         if for_sale:
 
@@ -203,7 +203,7 @@ class Query:
                     filter_state["doz"] = {"value": str(sold_in_last_x_days)}
 
         else:
-            filter_state["isForRent"] = True
+            filter_state["isForRent"] = {"value": True}
             filter_state["isForSaleByAgent"] = {"value": False}
             filter_state["isForSaleByOwner"] = {"value": False}
             filter_state["isNewConstruction"] = {"value": False}
