@@ -130,3 +130,6 @@ dmypy.json
 
 # Exclude Notebooks (used for testing/experimenting only)
 *.ipynb
+
+# Exclude notes.md
+notes.md
