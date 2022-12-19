@@ -33,7 +33,11 @@ class Sale:
 
         self.price = self.property['price']
         self.zestimate = self.property['zestimate']
+        self.rental_zestimate = self.property['rentZestimate']
+        self.tax_history = self.property['taxHistory']
+        self.price_history = self.property['priceHistory']
         self.currency = self.property['currency']
+
         self.status = self.get_status()
         self.days_on_zillow = self.property['daysOnZillow']
         self.views = self.property['pageViewCount']
@@ -80,6 +84,10 @@ class Sale:
         self.water_source = self.property['waterSource']
 
         self.attribution = self.property['attributionInfo']
+
+        self.schools = self.property['schools']
+        self.similar = self.property['comps']
+        self.nearby = self.property['nearbyHomes']
 
     @staticmethod
     def get_page(url: str, headers: Dict = defaults.HEADER) -> requests.Response:
