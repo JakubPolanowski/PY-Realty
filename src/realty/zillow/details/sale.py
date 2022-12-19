@@ -36,13 +36,19 @@ class Sale:
         self.currency = self.property['currency']
         self.status = self.get_status()
         self.days_on_zillow = self.property['daysOnZillow']
+        self.views = self.property['pageViewCount']
+        self.saves = self.property['favoriteCount']
+
         self.tags = self.get_tags()
+        self.description = self.property['description']
 
         self.address = self.property['address']
         self.street_address = self.address['streetAddress']
         self.city = self.address['city']
         self.state = self.address['state']
         self.zip = self.address['zopcode']
+        self.latitude = self.property['latitude']
+        self.longitutde = self.property['longitude']
 
         self.bedrooms = self.property['bedrooms']
         self.bathrooms = self.property['bathrooms']
@@ -183,3 +189,16 @@ class Sale:
         """
 
         return [tag.text for tag in self.soup.find("div", "jOTCMt").find_all("span")]
+
+    def get_facts_and_features(self) -> Dict[str, Any]:
+        """Gets the Zillow facts and features section of the webpage as a dictionary
+
+        Returns:
+            Dict[str, Any]: Facts and features dictionary
+        """
+
+        return {tag.h5.text: {
+            stag.h6.text: [
+                li.text for li in stag.ul.find_all('li')
+            ] for stag in tag.find_all("div")
+        } for tag in self.soup.find_all("div", "jCOrgb")}
