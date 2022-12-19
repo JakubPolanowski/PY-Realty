@@ -36,6 +36,7 @@ class Sale:
         self.currency = self.property['currency']
         self.status = self.get_status()
         self.days_on_zillow = self.property['daysOnZillow']
+        self.tags = self.get_tags()
 
         self.address = self.property['address']
         self.street_address = self.address['streetAddress']
@@ -173,3 +174,12 @@ class Sale:
                 glance[key, value]
 
         return glance
+
+    def get_tags(self) -> List[str]:
+        """Gets the taglines on the page
+
+        Returns:
+            List[str]: List of taglines
+        """
+
+        return [tag.text for tag in self.soup.find("div", "jOTCMt").find_all("span")]
