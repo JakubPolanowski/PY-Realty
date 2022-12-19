@@ -159,7 +159,7 @@ class Sale:
 
         return preload['apiCache'][var_key], preload['apiCache'][full_key]
 
-    def get_status(self) -> str:
+    def get_status(self) -> str | None:
         """Gets the status of the house listing.
 
         Returns:
@@ -172,9 +172,14 @@ class Sale:
         """Gets the Zillow likely to sell estimation.
 
         Returns:
-            str: Zillow likely to sell estimation
+            str | None: Zillow likely to sell estimation. Returns None if there is none
         """
-        return self.soup.find("p", "kHeRng").text.replace(u'\u200a', '')
+        tag = self.soup.find("p", "kHeRng")
+
+        if not tag:
+            return tag
+        else:
+            return tag.text.replace(u'\u200a', '')
 
     def get_at_a_glance(self) -> Dict[str, Any]:
         """Gets the Zillow at a glance facts.
