@@ -33,6 +33,7 @@ class Sale:
 
         self.price = self.property['price']
         self.currency = self.property['currency']
+        self.status = self.get_status()
 
         self.address = self.property['address']
         self.street_address = self.address['streetAddress']
@@ -138,3 +139,12 @@ class Sale:
                     "Unexpected key in apiCache dictionary of preload dictionary")
 
         return preload['apiCache'][var_key], preload['apiCache'][full_key]
+
+    def get_status(self) -> str:
+        """Gets the status of the house listing.
+
+        Returns:
+            str: The house status
+        """
+
+        return self.soup.find("span", "iOiapS").text
