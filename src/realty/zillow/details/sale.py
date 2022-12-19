@@ -8,9 +8,24 @@ from .. import defaults
 
 
 class Sale:
-    # TODO
+    """This class extracts the properties/details of a property Sale from Zillow's detail URL page. 
+
+    While most of the key details can be easily access via the class attributes or functions, there are some more advanced details that not parsed/organized by this class. For the full html page, see the soup attribute. Additionally check the variant_cache and the full_cache for the complete dictionaries of the api cache. 
+
+    Attributes:
+        url (str): The detail URL that this class has parsed
+        soup (BeautifulSoup): The html content of this page parsed to a soup object
+        preload (Dict[Any, Any]): The complete api cache preload
+        zpid (int): The Zillow property ID
+        variant_cache (Dict[Any, Any])
+    """
 
     def __init__(self, url: str) -> None:
+        """This initializes the sale object, which call a GET request on the Zillow detail URL. 
+
+        Args:
+            url (str): The Zillow Property Sale details URL.
+        """
 
         self.url = url
 
@@ -19,79 +34,80 @@ class Sale:
 
         # get api preload
         self.preload = self.get_api_preload(self.soup)
-        self.zpid = self.preload['zpid']
+        self.zpid: int = self.preload['zpid']
 
         # get caches
-        self.varient_cache, self.full_cache = self.get_variant_and_full_from_preload(
+        self.variant_cache, self.full_cache = self.get_variant_and_full_from_preload(
             self.preload)
 
         # quick access values
-        self.property = self.full_cache['property']
+        self.property: Dict[Any, Any] = self.full_cache['property']
 
-        self.home_type = self.property['homeType']
-        self.year_built = self.property['yearBuilt']
-        self.parcel_number = self.property['parcelNumber']
+        self.home_type: str = self.property['homeType']
+        self.year_built: int = self.property['yearBuilt']
+        self.parcel_number: str = self.property['parcelNumber']
 
-        self.price = self.property['price']
-        self.zestimate = self.property['zestimate']
-        self.rental_zestimate = self.property['rentZestimate']
-        self.tax_history = self.property['taxHistory']
-        self.price_history = self.property['priceHistory']
-        self.currency = self.property['currency']
+        self.price: int = self.property['price']
+        self.zestimate: int = self.property['zestimate']
+        self.rental_zestimate: int = self.property['rentZestimate']
+        self.tax_history: List[Dict[str, Number]] = self.property['taxHistory']
+        self.price_history: List[Dict[str, Any]
+                                 ] = self.property['priceHistory']
+        self.currency: str = self.property['currency']
 
-        self.status = self.get_status()
-        self.days_on_zillow = self.property['daysOnZillow']
-        self.views = self.property['pageViewCount']
-        self.saves = self.property['favoriteCount']
+        self.status: str = self.get_status()
+        self.days_on_zillow: int = self.property['daysOnZillow']
+        self.views: int = self.property['pageViewCount']
+        self.saves: int = self.property['favoriteCount']
 
-        self.tags = self.get_tags()
-        self.description = self.property['description']
+        self.tags: List[str] = self.get_tags()
+        self.description: str = self.property['description']
 
-        self.address = self.property['address']
-        self.street_address = self.address['streetAddress']
-        self.city = self.address['city']
-        self.state = self.address['state']
-        self.zip = self.address['zopcode']
-        self.latitude = self.property['latitude']
-        self.longitutde = self.property['longitude']
+        self.address: Dict[str, Any] = self.property['address']
+        self.street_address: str = self.address['streetAddress']
+        self.city: str = self.address['city']
+        self.state: str = self.address['state']
+        self.zip: str = self.address['zopcode']
+        self.latitude: float = self.property['latitude']
+        self.longitutde: float = self.property['longitude']
 
-        self.bedrooms = self.property['bedrooms']
-        self.bathrooms = self.property['bathrooms']
+        self.bedrooms: Number = self.property['bedrooms']
+        self.bathrooms: Number = self.property['bathrooms']
 
-        self.interior_sqft = self.property['livingArea']
+        self.interior_sqft: Number = self.property['livingArea']
 
-        self.appliances = self.property['appliances']
-        self.cooling = self.property['cooling']
-        self.heating = self.property['heating']
-        self.community_features = self.property['communityFeatures']
-        self.fireplaces = self.property['fireplaces']
-        self.garage = self.property['hasGarage']
-        self.interior_features = self.property['interiorFeatures']
+        self.appliances: List[str] = self.property['appliances']
+        self.cooling: List[str] = self.property['cooling']
+        self.heating: List[str] = self.property['heating']
+        self.community_features: List[str] = self.property['communityFeatures']
+        self.fireplaces: Number = self.property['fireplaces']
+        self.garage: bool = self.property['hasGarage']
+        self.interior_features: List[str] = self.property['interiorFeatures']
 
-        self.attic = self.property['attic']
-        self.basement = self.property['basement']
+        self.attic: str | None = self.property['attic']
+        self.basement: str = self.property['basement']
 
-        self.hoa_fee = self.property['hoaFee']
+        self.hoa_fee: Number | None = self.property['hoaFee']
 
-        self.levels = self.property['levels']
+        self.levels: str = self.property['levels']
 
-        self.lot_features = self.property['lotFeatures']
-        self.lot_size = self.property['lotSize']
-        self.lot_size_dimensions = self.property['lotSizeDimensions']
-        self.lot_sqft = self.parse_lot_size(self.lot_size)
+        self.lot_features: List[str] | None = self.property['lotFeatures']
+        self.lot_size: str = self.property['lotSize']
+        self.lot_size_dimensions: str = self.property['lotSizeDimensions']
+        self.lot_sqft: Number = self.parse_lot_size(self.lot_size)
 
-        self.sewer = self.property['sewer']
+        self.sewer: List[str] = self.property['sewer']
         if self.sewer:
             self.sewer = self.sewer[0]
-        self.water_source = self.property['waterSource']
+        self.water_source: List[str] = self.property['waterSource']
         if self.water_source:
             self.water_source = self.water_source[0]
 
-        self.attribution = self.property['attributionInfo']
+        self.attribution: Dict[str, Any] = self.property['attributionInfo']
 
-        self.schools = self.property['schools']
-        self.similar = self.property['comps']
-        self.nearby = self.property['nearbyHomes']
+        self.schools: List[Dict[str, Any]] = self.property['schools']
+        self.similar: List[Dict[str, Any]] = self.property['comps']
+        self.nearby: List[Dict[str, Any]] = self.property['nearbyHomes']
 
     @staticmethod
     def get_page(url: str, headers: Dict = defaults.HEADER) -> requests.Response:
