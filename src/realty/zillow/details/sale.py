@@ -35,6 +35,7 @@ class Sale:
         self.zestimate = self.property['zestimate']
         self.currency = self.property['currency']
         self.status = self.get_status()
+        self.days_on_zillow = self.property['daysOnZillow']
 
         self.address = self.property['address']
         self.street_address = self.address['streetAddress']
@@ -49,6 +50,7 @@ class Sale:
 
         self.appliances = self.property['appliances']
         self.cooling = self.property['cooling']
+        self.heating = self.property['heating']
         self.community_features = self.property['communityFeatures']
         self.fireplaces = self.property['fireplaces']
         self.garage = self.property['hasGarage']
@@ -157,3 +159,17 @@ class Sale:
             str: Zillow likely to sell estimation
         """
         return self.soup.find("p", "kHeRng").text.replace(u'\u200a', '')
+
+    def get_at_a_glance(self) -> Dict[str, Any]:
+        """Gets the Zillow at a glance facts.
+
+        Returns:
+            Dict[str, Any]: Returns a dictionary of the at a glance facts.
+        """
+
+        glance = {}
+        for pair in self.property['atAGlanceFacts']:
+            for key, value in pair.items():
+                glance[key, value]
+
+        return glance
