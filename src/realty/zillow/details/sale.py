@@ -18,6 +18,10 @@ class Sale:
             self.get_page(self.url)
         )
 
+        # get caches
+        self.varient_cache, self.full_cache = self.get_variant_and_full_from_preload(
+            self.preload)
+
     @staticmethod
     def get_page(url: str, headers: Dict = defaults.HEADER) -> requests.Response:
         """Submits a GET request to the detail URL to get the page.
@@ -48,3 +52,28 @@ class Sale:
         preload['apiCache'] = json.loads(preload['apiCache'])
 
         return soup, preload
+
+    @staticmethod
+    def get_variant_and_full_from_preload(preload: Dict[Any, Any]) -> Tuple[Dict[Any, Any], Dict[Any, Any]]:
+        """Gets the variant and full API caches from the preload dictionary.
+
+        Args:
+            preload (Dict[Any, Any]): The preload dictionary obtained via get_root_props_from_page
+
+        Raises:
+            KeyError: Unexpected key within apiCache
+
+        Returns:
+            Tuple[Dict[Any, Any], Dict[Any, Any]]: variant api cache dictionary, full api cache dictionary
+        """
+
+        for k in preload['apiCache'].keys():
+            if 'Variant' in k:
+                var_key = k
+            elif 'Full' in k:
+                full_key = k
+            else:
+                raise KeyError(
+                    "Unexpected key in apiCache dictionary of preload dictionary")
+
+        return preload['apiCache'][var_key], preload['apiCache'][full_key]
