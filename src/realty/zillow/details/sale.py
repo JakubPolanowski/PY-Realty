@@ -2,6 +2,7 @@
 import json
 import requests
 from typing import Dict, Any, List, Literal, Union, Set, Tuple
+from numbers import Number
 from bs4 import BeautifulSoup
 from .. import defaults
 
@@ -232,3 +233,68 @@ class Sale:
         return requests.request(
             "POST", url, json=payload, headers=defaults.HEADER, params=querystring
         ).json()['data']
+
+    @staticmethod
+    def calculate_monthly_mortgage(principal: Number, interest: Number, months: Number) -> Number:
+        """Calculates the monthly mortgage payment. Formula from 
+
+        Args:
+            principal (Number): The principal for the mortgage (in this case home price minus the down payment)
+            interest (Number): The interest rate as a monthly percentage (5% -> (5/100)/12)
+            months (Number): Number of months on the mortagage
+
+        Returns:
+            Number: The monthly mortgage payment
+        """
+        return principal * (interest * (1+interest)**months) / ((1+interest)**months-1)
+
+    def get_monthly_estimated_cost(self, down: Number, interest: Number = None, months: Number = 30, tax: Number = None, home_insurance: Number = None, mortgage_insurance: Number = 0, hoa_fee: Number = None, utilies: Number = 0) -> Number:
+        """Estimates the monthly cost of buying the property. 
+
+        Home insurance Zillow estimation formula based on Zillow javascript code:
+        https://www.zillowstatic.com/s3/hdp/home-details/components/for-sale-shopper-platform/app-df284a1fbb.js 
+
+        Args:
+            down (Number): The money down. Typically 20%.
+            interest (Number, optional): The interest rate. If not specifed (None) will use Zillow's estimated 30 year fixed rate. NOTE: Interest rate should be given as a decimal, so 5% -> 0.05. Defaults to None.
+            months (Number, optional): The number of months on the mortgage. Defaults to 30.
+            tax (Number, optional): The property tax rate. NOTE: tax rate should be given as a decimal so 5% -> 0.05. If not specified (None) will use property's current tax rate. Defaults to None.
+            home_insurance (Number, optional): Home insurance monthly cost. If not specified (None) will estimate as 0.0042 * property price. This is how Zillow estimates. Defaults to None.
+            mortgage_insurance (Number, optional): The mortgage monthly insurance cost. Typically this only occurs when the downpayment is less than 20% otherwise will be 0. Defaults to 0.
+            hoa_fee (Number, optional): The monthly HOA fee. If not specified (None) will lookup the property HOA fee, if any. Defaults to None.
+            utilies (Number, optional): The monthly cost of utilities. Should be manually specified otherwise will not be accounted for. Defaults to 0.
+
+        Returns:
+            Number: The estimated monthly cost
+        """
+
+        mortgage_monthly = self.calculate_monthly_mortgage(
+            self.price - down, interest/12, months
+        )
+        if tax:
+            pass
+        elif not self.property['propertyTaxRate']:
+            tax = 0
+        else:
+            tax = self.property['propertyTaxRate'] / 100
+
+        tax_monthly = tax * self.price / 12
+
+        if not home_insurance:
+            home_insurance = self.price * 0.0042
+
+        if hoa_fee:
+            pass
+        elif not self.property['monthlyHoaFee']:
+            hoa_fee = 0
+        else:
+            hoa_fee = self.property['monthlyHoaFee']
+
+        return sum([
+            mortgage_monthly,
+            mortgage_insurance,
+            tax_monthly,
+            home_insurance,
+            hoa_fee,
+            utilies
+        ])
