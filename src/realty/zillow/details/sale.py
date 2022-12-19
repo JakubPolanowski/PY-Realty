@@ -202,3 +202,25 @@ class Sale:
                 li.text for li in stag.ul.find_all('li')
             ] for stag in tag.find_all("div")
         } for tag in self.soup.find_all("div", "jCOrgb")}
+
+    def get_walk_and_bike_score(self) -> Dict[str, Any]:
+        """Gets the walk and bike details that appears on the Zillow details page
+
+        Returns:
+            Dict[str, Any]: Walk and bike score response dictionary
+        """
+
+        url = "https://www.zillow.com/graphql"
+        querystring = {"zpid": self.zpid,
+                       "operationName": "WalkTransitAndBikeScoreQuery"}
+
+        payload = {
+            "clientVersion": "home-details/6.1.1569.master.099cd8a",
+            "operationName": "WalkTransitAndBikeScoreQuery",
+            "query": "query WalkTransitAndBikeScoreQuery($zpid: ID!) {\n  property(zpid: $zpid) {\n    id\n    walkScore {\n      walkscore\n      description\n      ws_link\n    }\n    transitScore {\n      transit_score\n      description\n      ws_link\n    }\n    bikeScore {\n      bikescore\n      description\n    }\n  }\n}\n",
+            "variables": {"zpid": self.zpid}
+        }
+
+        return requests.request(
+            "POST", url, json=payload, headers=defaults.HEADER, params=querystring
+        ).json()['data']
