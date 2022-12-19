@@ -80,9 +80,12 @@ class Sale:
         self.lot_size = self.property['lotSize']
         self.lot_size_dimensions = self.property['lotSizeDimensions']
 
-        self.sewer = self.property['sewer']  # TODO consider parsing?
-        # Todo consider parsing?
+        self.sewer = self.property['sewer']
+        if self.sewer:
+            self.sewer = self.sewer[0]
         self.water_source = self.property['waterSource']
+        if self.water_source:
+            self.water_source = self.water_source[0]
 
         self.attribution = self.property['attributionInfo']
 
