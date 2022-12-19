@@ -18,10 +18,57 @@ class Sale:
 
         # get api preload
         self.preload = self.get_api_preload(self.soup)
+        self.zpid = self.preload['zpid']
 
         # get caches
         self.varient_cache, self.full_cache = self.get_variant_and_full_from_preload(
             self.preload)
+
+        # quick access values
+        self.property = self.full_cache['property']
+
+        self.home_type = self.property['homeType']
+        self.year_built = self.property['yearBuilt']
+        self.parcel_number = self.property['parcelNumber']
+
+        self.price = self.property['price']
+        self.currency = self.property['currency']
+
+        self.address = self.property['address']
+        self.street_address = self.address['streetAddress']
+        self.city = self.address['city']
+        self.state = self.address['state']
+        self.zip = self.address['zopcode']
+
+        self.bedrooms = self.property['bedrooms']
+        self.bathrooms = self.property['bathrooms']
+
+        self.interior_sqft = self.property['livingArea']
+
+        self.appliances = self.property['appliances']
+        self.cooling = self.property['cooling']
+        self.community_features = self.property['communityFeatures']
+        self.fireplaces = self.property['fireplaces']
+        self.garage = self.property['hasGarage']
+        self.interior_features = self.property['interiorFeatures']
+
+        self.attic = self.property['attic']
+        self.basement = self.property['basement']
+
+        self.hoa_fee = self.property['hoaFee']
+
+        self.levels = self.property['levels']
+
+        self.lot_features = self.property['lotFeatures']
+        # TODO have this parsed to number
+        self.lot_size = self.property['lotSize']
+        self.lot_size_dimensions = self.property['lotSizeDimensions']
+
+        self.sewer = self.property['sewer']  # TODO consider parsing?
+        # Todo consider parsing?
+        self.water_source = self.property['waterSource']
+
+        self.attribution = self.property['attributionInfo']
 
     @staticmethod
     def get_page(url: str, headers: Dict = defaults.HEADER) -> requests.Response:
