@@ -13,10 +13,11 @@ class Sale:
 
         self.url = url
 
-        # get root props
-        self.soup, self.preload = self.get_root_props_from_page(
-            self.get_page(self.url)
-        )
+        # get soup
+        self.soup = self.make_soup(self.get_page(self.url))
+
+        # get api preload
+        self.preload = self.get_api_preload(self.soup)
 
         # get caches
         self.varient_cache, self.full_cache = self.get_variant_and_full_from_preload(
@@ -36,29 +37,42 @@ class Sale:
         return requests.get(url, headers)
 
     @staticmethod
-    def get_root_props_from_page(page: requests.Response) -> Tuple[BeautifulSoup, Dict[Any, Any]]:
-        """This gets the root/top most props of the page, that being the html parsed to a BeautifulSoup object and a dictionary with the preloaded data.
+    def make_soup(page: requests.Response) -> BeautifulSoup:
+        """This is a very simple function that has barely a reason to exist. Just takes the response content and has it parsed by Beautiful Soup via its html parser.
 
         Args:
             page (requests.Response): The GET response from a valid GET requests on the detail URL page
 
         Returns:
-            Tuple[BeautifulSoup, Dict[Any, Any]]: Page HTML parsed as a BeautifulSoup Object, Preloaded data parsed to a dictionary
+            BeautifulSoup: Page HTML parsed as a BeautifulSoup Object
         """
 
         soup = BeautifulSoup(page.content, "html.parser")
+
+        return soup
+
+    @staticmethod
+    def get_api_preload(soup: BeautifulSoup) -> Dict[Any, Any]:
+        """Extracts and parses the API preload cache from the page soup.
+
+        Args:
+            soup (BeautifulSoup): The html page soup object
+
+        Returns:
+            Dict[Any, Any]: The api preload cache dictionary
+        """
+
         preload = soup.find("script", id="hdpApolloPreloadedData").text
         preload = json.loads(preload)
         preload['apiCache'] = json.loads(preload['apiCache'])
-
-        return soup, preload
+        return preload
 
     @staticmethod
     def get_variant_and_full_from_preload(preload: Dict[Any, Any]) -> Tuple[Dict[Any, Any], Dict[Any, Any]]:
         """Gets the variant and full API caches from the preload dictionary.
 
         Args:
-            preload (Dict[Any, Any]): The preload dictionary obtained via get_root_props_from_page
+            preload (Dict[Any, Any]): The preload dictionary obtained via get_api_preload
 
         Raises:
             KeyError: Unexpected key within apiCache
