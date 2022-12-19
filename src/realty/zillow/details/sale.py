@@ -149,3 +149,11 @@ class Sale:
         """
 
         return self.soup.find("span", "iOiapS").text
+
+    def get_likely_to_sell(self) -> str:
+        """Gets the Zillow likely to sell estimation.
+
+        Returns:
+            str: Zillow likely to sell estimation
+        """
+        return self.soup.find("p", "kHeRng").text.replace(u'\u200a', '')
