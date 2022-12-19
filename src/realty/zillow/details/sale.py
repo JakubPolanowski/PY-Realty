@@ -32,6 +32,7 @@ class Sale:
         self.parcel_number = self.property['parcelNumber']
 
         self.price = self.property['price']
+        self.zestimate = self.property['zestimate']
         self.currency = self.property['currency']
         self.status = self.get_status()
 
