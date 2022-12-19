@@ -76,9 +76,9 @@ class Sale:
         self.levels = self.property['levels']
 
         self.lot_features = self.property['lotFeatures']
-        # TODO have this parsed to number
         self.lot_size = self.property['lotSize']
         self.lot_size_dimensions = self.property['lotSizeDimensions']
+        self.lot_sqft = self.parse_lot_size(self.lot_size)
 
         self.sewer = self.property['sewer']
         if self.sewer:
@@ -183,6 +183,36 @@ class Sale:
             return tag
         else:
             return tag.text.replace(u'\u200a', '')
+
+    @classmethod
+    def parse_lot_size(cls, lot_size: str) -> Number:
+        """Parses lot size string to sqft. Assumes that lot size will follow format of 'x Acres' or 'x.x Acres'.
+
+        Args:
+            lot_size (str): Zillow lot size string.
+
+        Returns:
+            Number: Lot size in sqft
+        """
+        if not 'Acres' in lot_size:
+            ValueError("Expected to find 'Acres' in lot_size string, did not")
+
+        acres = int(lot_size.replace("Acres", "").strip())
+        return cls.calculate_acres_to_sqft(acres)
+
+    @staticmethod
+    def calculate_acres_to_sqft(acres: Number) -> Number:
+        """Converts acres to sqft. 
+
+        Conversion factor from https://www.metric-conversions.org/area/acres-to-square-feet.htm
+
+        Args:
+            acres (Number): Acres
+
+        Returns:
+            Number: sqft
+        """
+        return acres * 43560
 
     def get_at_a_glance(self) -> Dict[str, Any]:
         """Gets the Zillow at a glance facts.
