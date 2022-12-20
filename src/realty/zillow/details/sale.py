@@ -1,10 +1,6 @@
 # This handles parsing of sale data
-import json
-import requests
-from typing import Dict, Any, List, Literal, Union, Set, Tuple
+from typing import Dict, Any, List
 from numbers import Number
-from bs4 import BeautifulSoup
-from .. import defaults
 from details_page import Details_Page
 
 
