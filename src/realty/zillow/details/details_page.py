@@ -1,7 +1,7 @@
 import json
 import requests
 from bs4 import BeautifulSoup
-from typing import Dict, Any, List, Literal, Union, Set, Tuple
+from typing import Dict, Any, Tuple
 from .. import defaults
 
 
