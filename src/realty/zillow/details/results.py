@@ -2,7 +2,7 @@
 from typing import Literal, List, Dict, Any
 
 
-class Details:
+class Result:
     # TODO
     # This gets the detail for a single page given detail_url and status_type
 
