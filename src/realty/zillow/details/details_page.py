@@ -6,6 +6,8 @@ from .. import defaults
 
 
 class Details_Page:
+    """Static class which contains methods that are more or less generalizable to detail page parsing of Sales, Rental Homes, and Rental Apartments
+    """
 
     @staticmethod
     def get_page(url: str, headers: Dict = defaults.HEADER) -> requests.Response:
