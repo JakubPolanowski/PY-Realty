@@ -79,6 +79,36 @@ class Details_Page:
         return preload['apiCache'][var_key], preload['apiCache'][full_key]
 
     @staticmethod
+    def get_next_data(soup: BeautifulSoup) -> Dict[Any, Any]:
+        """Extracts and parses the NEXT_DATA cache from the page soup.
+
+        Args:
+            soup (BeautifulSoup): The html page soup object
+
+        Returns:
+            Dict[Any, Any]: The api preload cache dictionary
+        """
+
+        ndata = soup.find("script", id="__NEXT_DATA__").text
+        ndata = json.loads(ndata)
+
+        return ndata
+
+    @staticmethod
+    def get_initial_data_and_redux_state(ndata: Dict[Any, Any]) -> Dict[Any, Any]:
+        """Gets the initial Data and Redux State from the ndata (next data) dictionary.
+
+        Args:
+            ndata (Dict[Any, Any]): The ndata dictionary obtained via get_next_data
+
+        Returns:
+            Tuple[Dict[Any, Any], Dict[Any, Any]]: initialData dictionary, initialReduxState dictionary
+        """
+
+        props = ndata['props']
+        return props['initialData'], props['initialReduxState']
+
+    @staticmethod
     def get_walk_and_bike_score(zpid) -> Dict[str, Any]:
         """Gets the walk and bike details that appears on the Zillow details page
 
