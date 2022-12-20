@@ -95,7 +95,7 @@ class Details_Page:
         return ndata
 
     @staticmethod
-    def get_initial_data_and_redux_state(ndata: Dict[Any, Any]) -> Dict[Any, Any]:
+    def get_initial_data_and_redux_state(ndata: Dict[Any, Any]) -> Tuple[Dict[Any, Any], Dict[Any, Any]]:
         """Gets the initial Data and Redux State from the ndata (next data) dictionary.
 
         Args:
