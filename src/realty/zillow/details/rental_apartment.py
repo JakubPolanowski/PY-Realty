@@ -26,6 +26,18 @@ class Rental_Apartment(Details_Page):
         self.building: Dict[str, Any] = self.data['building']
         self.building_attributes: Dict[str,
                                        Any] = self.building['buildingAttributes']
+        self.building_name: str = self.building['buildingName']
+
+        self.zpid: str = self.building['zpid']
+        self.description: str = self.building['desciption']
+        self.low_income: bool = self.building['isLowIncome']
+        self.senior_housing: bool = self.building['isSeniorHousing']
+        self.student_housing: bool = self.building['isStudentHousing']
+
+        self.office_hours: List[str] = self.building['amenityDetails']['hours']
+        self.office_number: str = self.building['buildingPhoneNumber']
+
+        self.unit_features: List[str] = self.building['amenityDetails']['unitFeatures']
 
         self.city: str = self.building['city']
         self.county: str = self.building['county']
