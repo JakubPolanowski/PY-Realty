@@ -37,6 +37,7 @@ class Rental_Apartment(Details_Page):
         self.office_hours: List[str] = self.building['amenityDetails']['hours']
         self.office_number: str = self.building['buildingPhoneNumber']
 
+        self.key_features = self.get_key_features()
         self.unit_features: List[str] = self.building['amenityDetails']['unitFeatures']
 
         self.city: str = self.building['city']
@@ -98,3 +99,23 @@ class Rental_Apartment(Details_Page):
         self.custom_ammenites: str = self.building_attributes['customAmenities']
 
         self.floorplans: List[Dict[str, Any]] = self.building['floorplans']
+
+        # TODO extract lease terms
+        # TODO extract FAQ
+        # TODO extract nearby schools
+        # TODO extract walk score and transit score
+        # TODO extract management company
+
+        # TODO extract nearby cities, neighborhoods, zip codes, rental building
+
+    def get_key_features(self) -> Dict[str, str]:
+        """Gets the key features dictionary from the detail page.
+
+        Returns:
+            Dict[str, str]: Key features
+        """
+        return {
+            t.title.text: t.span.text for t in self.soup.find(
+                "div", id="bdp-building-facts-and-features"
+            ).ul.find_all('li')
+        }
