@@ -145,6 +145,9 @@ class Details_Page:
         Returns:
             Number: Lot size in sqft
         """
+        if not lot_size:
+            return None
+
         if not 'Acres' in lot_size:
             ValueError("Expected to find 'Acres' in lot_size string, did not")
 
