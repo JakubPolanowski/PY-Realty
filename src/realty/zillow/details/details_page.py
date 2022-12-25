@@ -156,6 +156,7 @@ class Preload_Detail_Page(Details_Page):
         # quick access values
         self.property: Dict[Any, Any] = self.full_cache['property']
 
+        self.status: str = self.property['homeStatus']
         self.home_type: str = self.property['homeType']
         self.year_built: int = self.property['yearBuilt']
         self.parcel_number: str = self.property['parcelNumber']

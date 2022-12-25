@@ -21,6 +21,7 @@ class Sale(Preload_Detail_Page):
 
         property (Dict[Any, Any]): The property data dictionary
 
+        status (str) : The home status, for example: FOR_SALE or FOR_RENT
         home_type (str): The home type
         year_built (int): Year home was built
         parcel_number (str): The parcel number
@@ -68,6 +69,7 @@ class Sale(Preload_Detail_Page):
 
         levels (str): The number of levels given as a string
 
+        parking (List[str]): The parking features, for example ["OFF_STREET"]
         lot_features (List[str] | None): List of lot features, if there are none, will be None
         lot_size (str): Lot size as as a string with units
         lot_size_dimensions (str): Dimensions of the lot as a string
