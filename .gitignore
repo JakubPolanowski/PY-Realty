@@ -133,3 +133,6 @@ dmypy.json
 
 # Exclude notes.md
 notes.md
+
+# Ignore vscode
+.vscode
