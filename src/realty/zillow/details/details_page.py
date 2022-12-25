@@ -204,6 +204,7 @@ class Preload_Detail_Page(Details_Page):
 
         self.levels: str | None = self.property['levels']
 
+        self.parking: List[str] | None = self.property['parkingFeatures']
         self.lot_features: List[str] | None = self.property['lotFeatures']
         self.lot_size: str | None = self.property['lotSize']
         self.lot_size_dimensions: str = self.property['lotSizeDimensions']
