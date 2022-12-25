@@ -274,3 +274,18 @@ class Preload_Detail_Page(Details_Page):
                 glance[key, value]
 
         return glance
+
+    def get_tags(self) -> List[str]:
+        """Gets the taglines on the page
+
+        Returns:
+            List[str]: List of taglines
+        """
+
+        return list(
+            {
+                tag for tag_model in self.property
+                .get('homeInsights', [{}])[0]
+                .get('insights', {}) for tag in tag_model.get('phrases', [])
+            }
+        )

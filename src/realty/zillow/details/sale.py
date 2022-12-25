@@ -107,21 +107,6 @@ class Sale(Preload_Detail_Page):
         else:
             return tag.text.replace(u'\u200a', '')
 
-    def get_tags(self) -> List[str]:
-        """Gets the taglines on the page
-
-        Returns:
-            List[str]: List of taglines
-        """
-
-        return list(
-            {
-                tag for tag_model in self.property
-                .get('homeInsights', [{}])[0]
-                .get('insights', {}) for tag in tag_model.get('phrases', [])
-            }
-        )
-
     def get_facts_and_features(self) -> Dict[str, Any]:
         """Gets the Zillow facts and features section of the webpage as a dictionary
 
