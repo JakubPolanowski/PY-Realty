@@ -159,8 +159,8 @@ class Sale(Details_Page):
         self.lot_size_dimensions: str = self.property['lotSizeDimensions']
         self.lot_sqft: Number = self.parse_lot_size(self.lot_size)
 
-        self.sewer: List[str] = self.property['sewer']
-        self.water_source: List[str] = self.property['waterSource']
+        self.sewer: List[str] | None = self.property['sewer']
+        self.water_source: List[str] | None = self.property['waterSource']
 
         self.attribution: Dict[str, Any] = self.property['attributionInfo']
 
