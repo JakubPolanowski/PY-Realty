@@ -114,7 +114,13 @@ class Sale(Preload_Detail_Page):
             List[str]: List of taglines
         """
 
-        return [tag.text for tag in self.soup.find("div", "jOTCMt").find_all("span")]
+        return list(
+            {
+                tag for tag_model in self.property
+                .get('homeInsights', [{}])[0]
+                .get('insights', {}) for tag in tag_model.get('phrases', [])
+            }
+        )
 
     def get_facts_and_features(self) -> Dict[str, Any]:
         """Gets the Zillow facts and features section of the webpage as a dictionary
