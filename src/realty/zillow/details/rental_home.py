@@ -83,6 +83,8 @@ class Rental_Home(Preload_Detail_Page):
         schools (List[Dict[str, Any]]): The nearby schools
         similar (List[Dict[str, Any]]): Similar properties
         nearby (List[Dict[str, Any]]): Nearby properties
+
+        fees_and_dues (List[Dict[str, Any]]): Fees/dues associated with property
     """
 
     def __init__(self, url: str) -> None:
@@ -93,3 +95,5 @@ class Rental_Home(Preload_Detail_Page):
         """
 
         super().__init__(url)
+
+        self.fees_and_dues: List[Dict[str, Any]] = self.property['feesAndDues']
