@@ -289,3 +289,16 @@ class Preload_Detail_Page(Details_Page):
                 .get('insights', {}) for tag in tag_model.get('phrases', [])
             }
         )
+
+    def get_facts_and_features(self) -> Dict[str, Any]:
+        """Gets the Zillow facts and features section of the webpage as a dictionary
+
+        Returns:
+            Dict[str, Any]: Facts and features dictionary
+        """
+
+        return {tag.h5.text: {
+            stag.h6.text: [
+                li.text for li in stag.ul.find_all('li')
+            ] for stag in tag.find_all("div")
+        } for tag in self.soup.find_all("div", "jCOrgb")}
