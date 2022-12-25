@@ -92,15 +92,6 @@ class Sale(Preload_Detail_Page):
 
         super().__init__(url)
 
-    def get_status(self) -> str | None:
-        """Gets the status of the house listing.
-
-        Returns:
-            str: The house status
-        """
-
-        return self.soup.find("span", "iOiapS").text
-
     def get_likely_to_sell(self) -> str:
         """Gets the Zillow likely to sell estimation.
 
