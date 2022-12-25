@@ -39,77 +39,6 @@ class Details_Page:
         return soup
 
     @staticmethod
-    def get_api_preload(soup: BeautifulSoup) -> Dict[Any, Any]:
-        """Extracts and parses the API preload cache from the page soup.
-
-        Args:
-            soup (BeautifulSoup): The html page soup object
-
-        Returns:
-            Dict[Any, Any]: The api preload cache dictionary
-        """
-
-        preload = soup.find("script", id="hdpApolloPreloadedData").text
-        preload = json.loads(preload)
-        preload['apiCache'] = json.loads(preload['apiCache'])
-        return preload
-
-    @staticmethod
-    def get_variant_and_full_from_preload(preload: Dict[Any, Any]) -> Tuple[Dict[Any, Any], Dict[Any, Any]]:
-        """Gets the variant and full API caches from the preload dictionary.
-
-        Args:
-            preload (Dict[Any, Any]): The preload dictionary obtained via get_api_preload
-
-        Raises:
-            KeyError: Unexpected key within apiCache
-
-        Returns:
-            Tuple[Dict[Any, Any], Dict[Any, Any]]: variant api cache dictionary, full api cache dictionary
-        """
-
-        for k in preload['apiCache'].keys():
-            if 'Variant' in k:
-                var_key = k
-            elif 'Full' in k:
-                full_key = k
-            else:
-                raise KeyError(
-                    "Unexpected key in apiCache dictionary of preload dictionary")
-
-        return preload['apiCache'][var_key], preload['apiCache'][full_key]
-
-    @staticmethod
-    def get_next_data(soup: BeautifulSoup) -> Dict[Any, Any]:
-        """Extracts and parses the NEXT_DATA cache from the page soup.
-
-        Args:
-            soup (BeautifulSoup): The html page soup object
-
-        Returns:
-            Dict[Any, Any]: The api preload cache dictionary
-        """
-
-        ndata = soup.find("script", id="__NEXT_DATA__").text
-        ndata = json.loads(ndata)
-
-        return ndata
-
-    @staticmethod
-    def get_initial_data_and_redux_state(ndata: Dict[Any, Any]) -> Tuple[Dict[Any, Any], Dict[Any, Any]]:
-        """Gets the initial Data and Redux State from the ndata (next data) dictionary.
-
-        Args:
-            ndata (Dict[Any, Any]): The ndata dictionary obtained via get_next_data
-
-        Returns:
-            Tuple[Dict[Any, Any], Dict[Any, Any]]: initialData dictionary, initialReduxState dictionary
-        """
-
-        props = ndata['props']
-        return props['initialData'], props['initialReduxState']
-
-    @staticmethod
     def get_walk_and_bike_score(zpid) -> Dict[str, Any]:
         """Gets the walk and bike details that appears on the Zillow details page
 
@@ -167,3 +96,80 @@ class Details_Page:
             Number: sqft
         """
         return acres * 43560
+
+
+class NextJS_Detail_Page(Details_Page):
+
+    @staticmethod
+    def get_next_data(soup: BeautifulSoup) -> Dict[Any, Any]:
+        """Extracts and parses the NEXT_DATA cache from the page soup.
+
+        Args:
+            soup (BeautifulSoup): The html page soup object
+
+        Returns:
+            Dict[Any, Any]: The api preload cache dictionary
+        """
+
+        ndata = soup.find("script", id="__NEXT_DATA__").text
+        ndata = json.loads(ndata)
+
+        return ndata
+
+    @staticmethod
+    def get_initial_data_and_redux_state(ndata: Dict[Any, Any]) -> Tuple[Dict[Any, Any], Dict[Any, Any]]:
+        """Gets the initial Data and Redux State from the ndata (next data) dictionary.
+
+        Args:
+            ndata (Dict[Any, Any]): The ndata dictionary obtained via get_next_data
+
+        Returns:
+            Tuple[Dict[Any, Any], Dict[Any, Any]]: initialData dictionary, initialReduxState dictionary
+        """
+
+        props = ndata['props']
+        return props['initialData'], props['initialReduxState']
+
+
+class Preload_Detail_Page(Details_Page):
+
+    @staticmethod
+    def get_api_preload(soup: BeautifulSoup) -> Dict[Any, Any]:
+        """Extracts and parses the API preload cache from the page soup.
+
+        Args:
+            soup (BeautifulSoup): The html page soup object
+
+        Returns:
+            Dict[Any, Any]: The api preload cache dictionary
+        """
+
+        preload = soup.find("script", id="hdpApolloPreloadedData").text
+        preload = json.loads(preload)
+        preload['apiCache'] = json.loads(preload['apiCache'])
+        return preload
+
+    @staticmethod
+    def get_variant_and_full_from_preload(preload: Dict[Any, Any]) -> Tuple[Dict[Any, Any], Dict[Any, Any]]:
+        """Gets the variant and full API caches from the preload dictionary.
+
+        Args:
+            preload (Dict[Any, Any]): The preload dictionary obtained via get_api_preload
+
+        Raises:
+            KeyError: Unexpected key within apiCache
+
+        Returns:
+            Tuple[Dict[Any, Any], Dict[Any, Any]]: variant api cache dictionary, full api cache dictionary
+        """
+
+        for k in preload['apiCache'].keys():
+            if 'Variant' in k:
+                var_key = k
+            elif 'Full' in k:
+                full_key = k
+            else:
+                raise KeyError(
+                    "Unexpected key in apiCache dictionary of preload dictionary")
+
+        return preload['apiCache'][var_key], preload['apiCache'][full_key]

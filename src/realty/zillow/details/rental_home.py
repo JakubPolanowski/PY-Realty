@@ -1,10 +1,10 @@
 # This handles parsing of rental homes data
 from typing import Dict, Any, List
 from numbers import Number
-from details_page import Details_Page
+from details_page import Preload_Detail_Page
 
 
-class Rental_Home(Details_Page):
+class Rental_Home(Preload_Detail_Page):
     # TODO
 
     def __init__(self, url: str) -> None:

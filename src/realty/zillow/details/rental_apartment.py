@@ -1,10 +1,10 @@
 # This handles parsing of rental apartments data
 from typing import Dict, Any, List
 from numbers import Number
-from details_page import Details_Page
+from details_page import NextJS_Detail_Page
 
 
-class Rental_Apartment(Details_Page):
+class Rental_Apartment(NextJS_Detail_Page):
 
     def __init__(self, url: str) -> None:
         """This initializes the Rental_Apartment object, which call a GET request on the Zillow detail URL. 

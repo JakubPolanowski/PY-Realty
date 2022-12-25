@@ -1,10 +1,10 @@
 # This handles parsing of sale data
 from typing import Dict, Any, List
 from numbers import Number
-from details_page import Details_Page
+from details_page import Preload_Detail_Page
 
 
-class Sale(Details_Page):
+class Sale(Preload_Detail_Page):
     """This class extracts the properties/details of a property Sale from Zillow's detail URL page. 
 
     While most of the key details can be easily access via the class attributes or functions, there are some more advanced details that not parsed/organized by this class. For the full html page, see the soup attribute. Additionally check the variant_cache and the full_cache for the complete dictionaries of the api cache. 
