@@ -2,7 +2,7 @@ import json
 import requests
 from bs4 import BeautifulSoup
 from numbers import Number
-from typing import Dict, Any, Tuple
+from typing import Dict, Any, Tuple, List
 from .. import defaults
 
 
@@ -258,3 +258,17 @@ class Preload_Detail_Page(Details_Page):
                     "Unexpected key in apiCache dictionary of preload dictionary")
 
         return preload['apiCache'][var_key], preload['apiCache'][full_key]
+
+    def get_at_a_glance(self) -> Dict[str, Any]:
+        """Gets the Zillow at a glance facts.
+
+        Returns:
+            Dict[str, Any]: Returns a dictionary of the at a glance facts.
+        """
+
+        glance = {}
+        for pair in self.property['atAGlanceFacts']:
+            for key, value in pair.items():
+                glance[key, value]
+
+        return glance

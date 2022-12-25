@@ -114,20 +114,6 @@ class Sale(Preload_Detail_Page):
         else:
             return tag.text.replace(u'\u200a', '')
 
-    def get_at_a_glance(self) -> Dict[str, Any]:
-        """Gets the Zillow at a glance facts.
-
-        Returns:
-            Dict[str, Any]: Returns a dictionary of the at a glance facts.
-        """
-
-        glance = {}
-        for pair in self.property['atAGlanceFacts']:
-            for key, value in pair.items():
-                glance[key, value]
-
-        return glance
-
     def get_tags(self) -> List[str]:
         """Gets the taglines on the page
 
