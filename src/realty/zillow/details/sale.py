@@ -148,14 +148,14 @@ class Sale(Details_Page):
         self.interior_features: List[str] = self.property['interiorFeatures']
 
         self.attic: str | None = self.property['attic']
-        self.basement: str = self.property['basement']
+        self.basement: str | None = self.property['basement']
 
         self.hoa_fee: Number | None = self.property['hoaFee']
 
-        self.levels: str = self.property['levels']
+        self.levels: str | None = self.property['levels']
 
         self.lot_features: List[str] | None = self.property['lotFeatures']
-        self.lot_size: str = self.property['lotSize']
+        self.lot_size: str | None = self.property['lotSize']
         self.lot_size_dimensions: str = self.property['lotSizeDimensions']
         self.lot_sqft: Number = self.parse_lot_size(self.lot_size)
 
