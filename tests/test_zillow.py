@@ -94,7 +94,12 @@ class TestNextJSDetailsPage:
 
 
 class TestPreloadDetailsPage:
-    ...  # TODO
+
+    @staticmethod
+    def test_init(reasonable_sale_results):
+        # just a basic check if init doesn't run into errors
+        for r in reasonable_sale_results[:3]:
+            details_page.Preload_Detail_Page(r['detailUrl'])
 
 
 class TestSale:
