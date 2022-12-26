@@ -80,7 +80,7 @@ class Details_Page:
         if not 'Acres' in lot_size:
             ValueError("Expected to find 'Acres' in lot_size string, did not")
 
-        acres = int(lot_size.replace("Acres", "").strip())
+        acres = float(lot_size.replace("Acres", "").strip())
         return cls.calculate_acres_to_sqft(acres)
 
     @staticmethod
@@ -156,10 +156,9 @@ class Preload_Detail_Page(Details_Page):
         # quick access values
         self.property: Dict[Any, Any] = self.full_cache['property']
 
-        self.status: str = self.property['homeStatus']
         self.home_type: str = self.property['homeType']
         self.year_built: int = self.property['yearBuilt']
-        self.parcel_number: str = self.property['parcelNumber']
+        self.parcel_number: str = self.property['resoFacts']['parcelNumber']
 
         self.price: int = self.property['price']
         self.zestimate: int = self.property['zestimate']
@@ -169,7 +168,7 @@ class Preload_Detail_Page(Details_Page):
                                  ] = self.property['priceHistory']
         self.currency: str = self.property['currency']
 
-        self.status: str = self.get_status()
+        self.status: str = self.property['homeStatus']
         self.days_on_zillow: int = self.property['daysOnZillow']
         self.views: int = self.property['pageViewCount']
         self.saves: int = self.property['favoriteCount']
@@ -181,7 +180,7 @@ class Preload_Detail_Page(Details_Page):
         self.street_address: str = self.address['streetAddress']
         self.city: str = self.address['city']
         self.state: str = self.address['state']
-        self.zip: str = self.address['zopcode']
+        self.zip: str = self.address['zipcode']
         self.latitude: float = self.property['latitude']
         self.longitutde: float = self.property['longitude']
 
@@ -190,29 +189,29 @@ class Preload_Detail_Page(Details_Page):
 
         self.interior_sqft: Number = self.property['livingArea']
 
-        self.appliances: List[str] = self.property['appliances']
-        self.cooling: List[str] = self.property['cooling']
-        self.heating: List[str] = self.property['heating']
-        self.community_features: List[str] = self.property['communityFeatures']
-        self.fireplaces: Number = self.property['fireplaces']
-        self.garage: bool = self.property['hasGarage']
-        self.interior_features: List[str] = self.property['interiorFeatures']
+        self.appliances: List[str] = self.property['resoFacts']['appliances']
+        self.cooling: List[str] = self.property['resoFacts']['cooling']
+        self.heating: List[str] = self.property['resoFacts']['heating']
+        self.community_features: List[str] = self.property['resoFacts']['communityFeatures']
+        self.fireplaces: Number = self.property['resoFacts']['fireplaces']
+        self.garage: bool = self.property['resoFacts']['hasGarage']
+        self.interior_features: List[str] = self.property['resoFacts']['interiorFeatures']
 
-        self.attic: str | None = self.property['attic']
-        self.basement: str | None = self.property['basement']
+        self.attic: str | None = self.property['resoFacts']['attic']
+        self.basement: str | None = self.property['resoFacts']['basement']
 
-        self.hoa_fee: Number | None = self.property['hoaFee']
+        self.hoa_fee: Number | None = self.property['resoFacts']['hoaFee']
 
-        self.levels: str | None = self.property['levels']
+        self.levels: str | None = self.property['resoFacts']['levels']
 
-        self.parking: List[str] | None = self.property['parkingFeatures']
-        self.lot_features: List[str] | None = self.property['lotFeatures']
-        self.lot_size: str | None = self.property['lotSize']
-        self.lot_size_dimensions: str = self.property['lotSizeDimensions']
+        self.parking: List[str] | None = self.property['resoFacts']['parkingFeatures']
+        self.lot_features: List[str] | None = self.property['resoFacts']['lotFeatures']
+        self.lot_size: str | None = self.property['resoFacts']['lotSize']
+        self.lot_size_dimensions: str = self.property['resoFacts']['lotSizeDimensions']
         self.lot_sqft: Number = self.parse_lot_size(self.lot_size)
 
-        self.sewer: List[str] | None = self.property['sewer']
-        self.water_source: List[str] | None = self.property['waterSource']
+        self.sewer: List[str] | None = self.property['resoFacts']['sewer']
+        self.water_source: List[str] | None = self.property['resoFacts']['waterSource']
 
         self.attribution: Dict[str, Any] = self.property['attributionInfo']
 
