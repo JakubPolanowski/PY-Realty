@@ -98,7 +98,7 @@ class Rental_Apartment(NextJS_Detail_Page):
         self.furnished: Any | None = self.building_attributes['isFurnished']
         self.custom_ammenites: str = self.building_attributes['customAmenities']
 
-        self.floorplans: List[Dict[str, Any]] = self.building['floorplans']
+        self.floorplans: List[Dict[str, Any]] = self.building['floorPlans']
 
         # TODO extract lease terms
         # TODO extract FAQ
