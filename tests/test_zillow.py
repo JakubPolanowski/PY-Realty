@@ -57,3 +57,31 @@ class TestQuery:
         assert all([
             expected_keys - set(r.keys()) == set() for r in results
         ])
+
+
+class TestDetailsPage:
+    ...  # TODO
+
+
+class TestNextJSDetailsPage:
+    ...  # TODO
+
+
+class TestPreloadDetailsPage:
+    ...  # TODO
+
+
+class TestSale:
+    ...  # TODO
+
+
+class TestRentalHome:
+    ...  # TODO
+
+
+class TestRentalApartment:
+    ...  # TODO
+
+
+class TestScrape:
+    ...  # TODO
