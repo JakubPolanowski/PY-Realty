@@ -77,11 +77,18 @@ class Details_Page:
         if not lot_size:
             return None
 
-        if not 'Acres' in lot_size:
-            ValueError("Expected to find 'Acres' in lot_size string, did not")
+        lot_size = lot_size.lower()
 
-        acres = float(lot_size.replace("Acres", "").strip())
-        return cls.calculate_acres_to_sqft(acres)
+        if 'acres' in lot_size:
+            acres = float(lot_size.replace(
+                "acres", "").replace(",", "").strip())
+            return cls.calculate_acres_to_sqft(acres)
+        elif "sqft" in lot_size:
+            sqft = float(lot_size.replace("sqft", "").replace(",", "").strip())
+            return sqft
+        else:
+            raise ValueError(
+                f"Expected to find 'acres' or 'sqft' but found neither - {lot_size}")
 
     @staticmethod
     def calculate_acres_to_sqft(acres: Number) -> Number:
@@ -279,11 +286,13 @@ class Preload_Detail_Page(Details_Page):
         Returns:
             List[str]: List of taglines
         """
+        homeinsights = self.property.get('homeInsights', [{}])
+        if not homeinsights:
+            return []
 
         return list(
             {
-                tag for tag_model in self.property
-                .get('homeInsights', [{}])[0]
+                tag for tag_model in homeinsights[0]
                 .get('insights', {}) for tag in tag_model.get('phrases', [])
             }
         )
