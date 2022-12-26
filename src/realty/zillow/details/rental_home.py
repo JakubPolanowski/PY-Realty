@@ -95,4 +95,5 @@ class Rental_Home(Preload_Detail_Page):
 
         super().__init__(url)
 
-        self.fees_and_dues: List[Dict[str, Any]] = self.property['feesAndDues']
+        self.fees_and_dues: List[Dict[str, Any]
+                                 ] = self.property['resoFacts']['feesAndDues']
