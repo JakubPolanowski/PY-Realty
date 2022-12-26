@@ -13,7 +13,7 @@ Early development. The library is still in early development and is missing key 
 ## Road Map
 
 - [ ] Zillow
-  - [ ] Zillow Search Query
+  - [x] Zillow Search Query
     - [x] Implementation
     - [x] Manual Testing
     - [x] Unit Testing
