@@ -39,7 +39,7 @@ class Details_Page:
         return soup
 
     @staticmethod
-    def get_walk_and_bike_score(zpid) -> Dict[str, Any]:
+    def get_walk_and_bike_score(zpid: str) -> Dict[str, Any]:
         """Gets the walk and bike details that appears on the Zillow details page
 
         Args:
