@@ -106,6 +106,21 @@ class TestPreloadDetailsPage:
         # just a basic check if init doesn't run into errors
         preload_details_subset
 
+    @staticmethod
+    def test_get_at_a_glance(preload_details_subset):
+        for p in preload_details_subset:
+            assert isinstance(p.get_at_a_glance(), dict)
+
+    @staticmethod
+    def test_get_tags(preload_details_subset):
+        for p in preload_details_subset:
+            assert isinstance(p.get_tags(), list)
+
+    @staticmethod
+    def test_get_facts_and_features(preload_details_subset):
+        for p in preload_details_subset:
+            assert isinstance(p.get_facts_and_features(), dict)
+
 
 class TestSale:
     ...  # TODO
