@@ -50,8 +50,6 @@ class Details_Page:
         """
 
         url = "https://www.zillow.com/graphql"
-        querystring = {"zpid": zpid,
-                       "operationName": "WalkTransitAndBikeScoreQuery"}
 
         payload = {
             "clientVersion": "home-details/6.1.1569.master.099cd8a",
@@ -61,7 +59,7 @@ class Details_Page:
         }
 
         return requests.request(
-            "POST", url, json=payload, headers=defaults.HEADER, params=querystring
+            "POST", url, json=payload, headers=defaults.HEADER
         ).json()['data']
 
     @classmethod
