@@ -140,6 +140,8 @@ class Sale(Preload_Detail_Page):
         Returns:
             Number: The estimated monthly cost
         """
+        if not interest:
+            interest = self.property['mortgageRates']['thirtyYearFixedRate']
 
         mortgage_monthly = self.calculate_monthly_mortgage(
             self.price - down, interest/12, months
