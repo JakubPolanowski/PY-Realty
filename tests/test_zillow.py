@@ -1,6 +1,8 @@
 import pytest
+from numbers import Number
 from src.realty.zillow import Query
 from src.realty.zillow.details import details_page
+from src.realty.zillow.details import Sale, Rental_Home, Rental_Apartment
 # from src.realty.zillow import details
 # Since there is no great source of truth, the goal of the tests here are to ensure that a reasonable query will return results in the expected format
 
@@ -123,7 +125,32 @@ class TestPreloadDetailsPage:
 
 
 class TestSale:
-    ...  # TODO
+    @staticmethod
+    @pytest.fixture(scope="class")
+    def sale_subset(reasonable_sale_results):
+        return [
+            Sale(r['detailUrl']) for r in reasonable_sale_results[:3]
+        ]
+
+    @staticmethod
+    def test_init(sale_subset):
+        # just a basic check if init doesn't run into errors
+        sale_subset
+
+    @staticmethod
+    def test_get_likely_to_sell(sale_subset):
+        for p in sale_subset:
+            assert isinstance(p.get_likely_to_sell(), (str, type(None)))
+
+    @staticmethod
+    def test_get_monthly_estimated_cost(sale_subset):
+        # this is primarily to test if function runs without error as opposed
+        # to function calculation validity
+        for p in sale_subset:
+            assert isinstance(
+                p.get_monthly_estimated_cost(p.price*.2),
+                Number
+            )
 
 
 class TestRentalHome:
