@@ -25,7 +25,7 @@ Early development. The library is still in early development and is missing key 
     - [x] Property Rental Listing
       - [x] Implementation
       - [x] Manual Testing
-      - [ ] Unit Testing
+      - [x] Unit Testing
     - [ ] Apartment Rental Listing
       - [ ] Implementation
         * Partial Implementation with some key details missing
