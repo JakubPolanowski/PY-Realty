@@ -94,7 +94,7 @@ class Sale(Preload_Detail_Page):
 
         super().__init__(url)
 
-    def get_likely_to_sell(self) -> str:
+    def get_likely_to_sell(self) -> str | None:
         """Gets the Zillow likely to sell estimation.
 
         Returns:
