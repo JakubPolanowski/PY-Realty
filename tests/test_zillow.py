@@ -214,7 +214,22 @@ class TestRentalHome:
 
 
 class TestRentalApartment:
-    ...  # TODO
+    @staticmethod
+    @pytest.fixture(scope="class")
+    def rental_subset(reasonable_rental_apartment_results):
+        return [
+            Rental_Apartment(f"https://www.zillow.com{r['detailUrl']}") for r in reasonable_rental_apartment_results[:3]
+        ]
+
+    @staticmethod
+    def test_init(rental_subset):
+        # just a basic check if init doesn't run into errors
+        rental_subset
+
+    @staticmethod
+    def test_get_key_features(rental_subset):
+        for p in rental_subset:
+            assert isinstance(p.get_key_features(), dict)
 
 
 class TestScrape:
