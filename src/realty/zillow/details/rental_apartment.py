@@ -1,7 +1,7 @@
 # This handles parsing of rental apartments data
 from typing import Dict, Any, List
 from numbers import Number
-from details_page import NextJS_Detail_Page
+from .details_page import NextJS_Detail_Page
 
 
 class Rental_Apartment(NextJS_Detail_Page):

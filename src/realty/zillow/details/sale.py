@@ -1,7 +1,7 @@
 # This handles parsing of sale data
 from typing import Dict, Any, List
 from numbers import Number
-from details_page import Preload_Detail_Page
+from .details_page import Preload_Detail_Page
 
 
 class Sale(Preload_Detail_Page):
