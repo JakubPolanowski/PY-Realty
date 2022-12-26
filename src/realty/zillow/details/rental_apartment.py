@@ -108,8 +108,6 @@ class Rental_Apartment(NextJS_Detail_Page):
         # TODO extract lease terms
         # TODO extract FAQ
         # TODO extract nearby schools
-        # TODO extract walk score and transit score
-        # TODO extract management company
 
         # TODO extract nearby cities, neighborhoods, zip codes, rental building
 
