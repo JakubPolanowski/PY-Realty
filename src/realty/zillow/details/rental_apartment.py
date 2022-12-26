@@ -1,7 +1,9 @@
 # This handles parsing of rental apartments data
+import requests
 from typing import Dict, Any, List
 from numbers import Number
 from .details_page import NextJS_Detail_Page
+from .. import defaults
 
 
 class Rental_Apartment(NextJS_Detail_Page):
@@ -100,6 +102,9 @@ class Rental_Apartment(NextJS_Detail_Page):
 
         self.floorplans: List[Dict[str, Any]] = self.building['floorPlans']
 
+        self.management: Dict[str, Any] = self.get_management_company(
+            self.zpid).get('rentalListingOwnerContact', {})
+
         # TODO extract lease terms
         # TODO extract FAQ
         # TODO extract nearby schools
@@ -119,3 +124,17 @@ class Rental_Apartment(NextJS_Detail_Page):
                 "div", id="bdp-building-facts-and-features"
             ).ul.find_all('li')
         }
+
+    @staticmethod
+    def get_management_company(zpid: str) -> Dict[str, Any]:
+        url = "https://www.zillow.com/graphql"
+
+        payload = {
+            "operationName": "ListingContactDetailsQuery",
+            "variables": {"zpid": zpid},
+            "query": r"query ListingContactDetailsQuery($zpid: ID!) {  viewer {    roles {      isLandlordLiaisonMember      isLlpRenter      __typename    }    __typename  }  property(zpid: $zpid) {    zpid    brokerId    isHousingConnector    isIncomeRestricted    rentalListingOwnerReputation {      responseRate      responseTimeMs      contactCount      applicationCount      isLandlordIdVerified      __typename    }    isFeatured    isListedByOwner    rentalListingOwnerContact {      displayName      businessName      phoneNumber      agentBadgeType      photoUrl      reviewsReceivedCount      reviewsUrl      ratingAverage      isBrokerLocalCompliance      __typename    }    postingProductType    postingContact {      brokerName      brokerageName      name      __typename    }    postingUrl    rentalMarketingTreatments    building {      bdpUrl      buildingName      housingConnector {        hcLink {          text          __typename        }        __typename      }      ppcLink {        text        __typename      }      __typename    }    __typename  }}"
+        }
+
+        return requests.request(
+            "POST", url, json=payload, headers=defaults.GRAPHQL_HEADER,)\
+            .json().get('data', {}).get('property', {})
