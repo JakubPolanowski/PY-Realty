@@ -22,16 +22,23 @@ class Rental_Apartment(NextJS_Detail_Page):
 
         # get ndata and initial
         self.ndata = self.get_next_data(self.soup)
-        self.data, self.redux_state = self.get_initial_data_and_redux_state(
+        self.idata, self.redux_state = self.get_initial_data_and_redux_state(
             self.ndata)
+
+        # get ids
+        self.zpid: str = self.building['zpid']
+        self.lot_id: str = self.building['lotId']
+
+        # if fresh data available, get fresh
+        self.data = self.get_fresh_graphQL_data(self.lot_id)
+        if not self.data:  # if empty dictionary fall back to initial data
+            self.data = self.idata
 
         self.building: Dict[str, Any] = self.data['building']
         self.building_attributes: Dict[str,
                                        Any] = self.building['buildingAttributes']
         self.building_name: str = self.building['buildingName']
 
-        self.zpid: str = self.building['zpid']
-        self.lot_id: str = self.building['lotId']
         self.description: str = self.building['description']
         self.low_income: bool = self.building['isLowIncome']
         self.senior_housing: bool = self.building['isSeniorHousing']
@@ -53,6 +60,10 @@ class Rental_Apartment(NextJS_Detail_Page):
         self.administrative_fee: Number | None = self.building_attributes['administrativeFee']
         self.deposite_fee_min: Number | None = self.building_attributes['depositFeeMin']
         self.deposite_fee_max: Number | None = self.building_attributes['depositFeeMax']
+        self.lease_terms: List[str] = self.building_attributes.get(
+            'leaseTerms', [])
+        self.utilities_included: List[str] = self.building_attributes.get(
+            'utilitiesIncluded', [])
 
         self.parking_policies: List[Dict[str, Any]
                                     ] = self.building_attributes['detailedParkingPolicies']
@@ -106,11 +117,46 @@ class Rental_Apartment(NextJS_Detail_Page):
         self.management: Dict[str, Any] = self.get_management_company(
             self.zpid).get('rentalListingOwnerContact', {})
 
-        # TODO extract lease terms
-        # TODO extract FAQ
-        # TODO extract nearby schools
+        self.schools: List[Dict[str, Any]
+                           ] = self.building.get('assignedSchools', [])
+        self.nearby_cities: List[Dict[str, Any]
+                                 ] = self.building.get('nearbyCities', [])
+        self.nearby_neighborhoods: List[Dict[str, Any]
+                                        ] = self.building.get('nearbyNeighborhoods', [])
+        self.nearby_zip: List[Dict[str, Any]
+                              ] = self.building.get('nearbyZipcodes', [])
+        self.nearby_rental_buildings: List[Dict[str, Any]
+                                           ] = self.building.get('nearbyBuildingLinks', [])
+        self.nearby_amenites: List[Dict[str, Any]
+                                   ] = self.building.get('nearbyAmenities', [])
 
-        # TODO extract nearby cities, neighborhoods, zip codes, rental building
+        # TODO extract FAQ
+
+    @staticmethod
+    def get_fresh_graphQL_data(lot_id: str) -> Dict[str, str]:
+        """Sends a GRAPHQL query to get the fresh data, as opposed to the initial data which may be stale or incomplete (for instance, lease terms are missing in initial data)
+
+        Args:
+            lot_id (str): The lot id
+
+        Returns:
+            Dict[str, str]: The data dictionary
+        """
+
+        url = "https://www.zillow.com/graphql"
+
+        payload = {
+            "operationName": "BuildingQuery",
+            "variables": {
+                "cache": False,
+                "lotId": lot_id,
+                "update": False},
+            "queryId": "efbb40baf8ba7747347be4d8b170edc9"
+        }
+
+        return requests.request(
+            "POST", url, json=payload, headers=defaults.GRAPHQL_HEADER
+        ).json().get('data', {})
 
     def get_key_features(self) -> Dict[str, str]:
         """Gets the key features dictionary from the detail page.
