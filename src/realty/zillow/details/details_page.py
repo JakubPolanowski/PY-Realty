@@ -158,7 +158,6 @@ class Preload_Detail_Page(Details_Page):
 
         self.home_type: str = self.property['homeType']
         self.year_built: int = self.property['yearBuilt']
-        self.parcel_number: str = self.property['resoFacts']['parcelNumber']
 
         self.price: int = self.property['price']
         self.zestimate: int = self.property['zestimate']

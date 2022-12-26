@@ -93,6 +93,7 @@ class Sale(Preload_Detail_Page):
         """
 
         super().__init__(url)
+        self.parcel_number: str = self.property['resoFacts']['parcelNumber']
 
     def get_likely_to_sell(self) -> str | None:
         """Gets the Zillow likely to sell estimation.

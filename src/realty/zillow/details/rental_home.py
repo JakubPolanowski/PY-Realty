@@ -24,7 +24,6 @@ class Rental_Home(Preload_Detail_Page):
         status (str) : The home status, for example: FOR_SALE or FOR_RENT
         home_type (str): The home type
         year_built (int): Year home was built
-        parcel_number (str): The parcel number
 
         price (int): The monthly rent
         zestimate (int): Zillow's estimated home value
