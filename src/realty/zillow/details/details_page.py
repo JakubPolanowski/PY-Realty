@@ -21,7 +21,7 @@ class Details_Page:
         Returns:
             requests.Response: The page GET response
         """
-        return requests.get(url, headers)
+        return requests.get(url, headers=headers)
 
     @staticmethod
     def make_soup(page: requests.Response) -> BeautifulSoup:
