@@ -268,9 +268,8 @@ class Preload_Detail_Page(Details_Page):
         """
 
         glance = {}
-        for pair in self.property['atAGlanceFacts']:
-            for key, value in pair.items():
-                glance[key, value]
+        for pair in self.property['resoFacts']['atAGlanceFacts']:
+            glance[pair['factLabel']] = pair['factValue']
 
         return glance
 
