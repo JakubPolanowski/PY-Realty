@@ -28,3 +28,32 @@ class TestQuery:
     @staticmethod
     def test_status_code(reasonable_query):
         assert reasonable_query.status_code == 200
+
+    @staticmethod
+    def test_expected_json_keys(reasonable_query):
+        assert list(
+            reasonable_query.json().keys()
+        ) == ['user', 'mapState', 'regionState', 'searchPageSeoObject', 'cat1', 'categoryTotals']
+
+    @staticmethod
+    def test_expected_results(reasonable_query):
+        assert isinstance(
+            reasonable_query.json()['cat1']['searchResults']['listResults'],
+            list
+        )
+
+    @staticmethod
+    def test_more_than_zero_results(reasonable_query):
+        assert len(reasonable_query.json()[
+                   'cat1']['searchResults']['listResults']) > 0
+
+    @staticmethod
+    def test_expected_result_keys(reasonable_query):
+        expected_keys = {'zpid', 'detailUrl', 'statusType'}
+
+        results = reasonable_query.json().get("cat1").get(
+            'searchResults').get('listResults')
+
+        assert all([
+            expected_keys - set(r.keys()) == set() for r in results
+        ])
