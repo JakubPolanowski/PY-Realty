@@ -94,12 +94,17 @@ class TestNextJSDetailsPage:
 
 
 class TestPreloadDetailsPage:
+    @staticmethod
+    @pytest.fixture(scope="class")
+    def preload_details_subset(reasonable_sale_results):
+        return [
+            details_page.Preload_Detail_Page(r['detailUrl']) for r in reasonable_sale_results[:3]
+        ]
 
     @staticmethod
-    def test_init(reasonable_sale_results):
+    def test_init(preload_details_subset):
         # just a basic check if init doesn't run into errors
-        for r in reasonable_sale_results[:3]:
-            details_page.Preload_Detail_Page(r['detailUrl'])
+        preload_details_subset
 
 
 class TestSale:
