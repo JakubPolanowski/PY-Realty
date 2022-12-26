@@ -38,6 +38,17 @@ def reasonable_rental_home_results():
     return [x for x in r if "homedetails" in x['detailUrl']]
 
 
+@pytest.fixture(scope="module")
+def reasonable_rental_apartment_results():
+    q = Query()
+    q.set_page(1) \
+        .set_search_term("Chattanooga, TN") \
+        .set_map_bounds(west=-85.58309022900734, east=-85.18483583447609, south=34.73748469750508, north=35.40678434232889) \
+        .set_filter_preset(for_sale=False, home_type={"Apartment"})
+    r = q.get_response(returns='results')
+    return [x for x in r if "/b/" in x['detailUrl']]
+
+
 class TestQuery:
 
     @staticmethod
@@ -103,7 +114,31 @@ class TestDetailsPage:
 
 
 class TestNextJSDetailsPage:
-    ...  # TODO
+    @staticmethod
+    @pytest.fixture(scope="class")
+    def page(reasonable_rental_apartment_results):
+        url = reasonable_rental_apartment_results[0]['detailUrl']
+        return details_page.NextJS_Detail_Page.get_page(f"https://www.zillow.com{url}")
+
+    @staticmethod
+    def test_get_next_data(page):
+        assert isinstance(
+            details_page.NextJS_Detail_Page.get_next_data(
+                details_page.NextJS_Detail_Page.make_soup(page)
+            ), dict
+        )
+
+    @staticmethod
+    def test_get_initial_and_redux(page):
+
+        data = details_page.NextJS_Detail_Page.get_next_data(
+            details_page.NextJS_Detail_Page.make_soup(page)
+        )
+        initial, redux = details_page.NextJS_Detail_Page.get_initial_data_and_redux_state(
+            data)
+
+        assert isinstance(initial, dict)
+        assert isinstance(redux, dict)
 
 
 class TestPreloadDetailsPage:
