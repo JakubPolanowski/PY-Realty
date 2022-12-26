@@ -26,8 +26,8 @@ class Rental_Apartment(NextJS_Detail_Page):
             self.ndata)
 
         # get ids
-        self.zpid: str = self.building['zpid']
-        self.lot_id: str = self.building['lotId']
+        self.zpid: str = self.idata['building']['zpid']
+        self.lot_id: str = self.idata['building']['lotId']
 
         # if fresh data available, get fresh
         self.data = self.get_fresh_graphQL_data(self.lot_id)
