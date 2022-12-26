@@ -1,5 +1,8 @@
 # this file is responsible for parsing the detailUrl page found in the query results.
 from typing import Literal, List, Dict, Any
+import numpy as np
+from time import sleep
+from numbers import Number
 from . import Sale, Rental_Home, Rental_Apartment
 
 
@@ -34,12 +37,23 @@ def parse_listing(detail_url: str, status_type: Literal["FOR_RENT", "FOR_SALE"])
         f"status_type should be either FOR_RENT or FOR_SALE, was {status_type}")
 
 
-class Results:
-    # TODO
-    # This gets the details for all the results, fetching results fo all
+def parse_listings(query_results: List[Dict[str, Any]], delay: Number = 0, jitter: Number = 1, verbose=False) -> List[Sale] | List[Rental_Home] | List[Rental_Apartment]:
 
-    def __init__(self, results: List[Dict[Any, Any]]) -> None:
-        pass  # TODO
+    delay_array = delay * np.random.rand(len(query_results)) * jitter
+    # last delay should be zero since no more details to scrape
+    delay_array[-1] = 0
+
+    results = []
+    for dtime, (i, result) in zip(delay_array, enumerate(query_results, 1)):
+
+        results.append(
+            parse_listing(result["detailUrl"], result['statusType'])
+        )
+
+        if verbose:
+            print(f"Parsed {i} of {len(query_results)}, delaying for {dtime}s")
+
+        sleep(dtime)
 
 
 class Results_Lazy:
