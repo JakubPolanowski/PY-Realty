@@ -109,7 +109,7 @@ class Sale(Preload_Detail_Page):
 
     @staticmethod
     def calculate_monthly_mortgage(principal: Number, interest: Number, months: Number) -> Number:
-        """Calculates the monthly mortgage payment. Formula from 
+        """Calculates the monthly mortgage payment. Formula from https://www.bankrate.com/mortgages/mortgage-calculator/#how-mortgage-calculator-help
 
         Args:
             principal (Number): The principal for the mortgage (in this case home price minus the down payment)
