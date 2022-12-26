@@ -206,7 +206,8 @@ class Preload_Detail_Page(Details_Page):
         self.parking: List[str] | None = self.property['resoFacts']['parkingFeatures']
         self.lot_features: List[str] | None = self.property['resoFacts']['lotFeatures']
         self.lot_size: str | None = self.property['resoFacts']['lotSize']
-        self.lot_size_dimensions: str = self.property['resoFacts']['lotSizeDimensions']
+        self.lot_size_dimensions: str = self.property['resoFacts'].get(
+            'lotSizeDimensions', None)
         self.lot_sqft: Number = self.parse_lot_size(self.lot_size)
 
         self.sewer: List[str] | None = self.property['resoFacts']['sewer']
