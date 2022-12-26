@@ -130,7 +130,7 @@ class Rental_Apartment(NextJS_Detail_Page):
         self.nearby_amenites: List[Dict[str, Any]
                                    ] = self.building.get('nearbyAmenities', [])
 
-        # TODO extract FAQ
+        self.review_info: Dict[str, Any] = self.building.get('reviewsInfo', {})
 
     @staticmethod
     def get_fresh_graphQL_data(lot_id: str) -> Dict[str, str]:
