@@ -3,7 +3,7 @@ from src.realty.zillow import Query
 # Since there is no great source of truth, the goal of the tests here are to ensure that a reasonable query will return results in the expected format
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="module")
 def reasonable_query():
     q = Query()
 
@@ -13,8 +13,8 @@ def reasonable_query():
     return q.get_response("request")
 
 
-@pytest.fixture(scope="class")
-def reasonable_query_results():
+@pytest.fixture(scope="module")
+def reasonable_sale_results():
     q = Query()
 
     q.set_page(1) \
@@ -25,5 +25,6 @@ def reasonable_query_results():
 
 class TestQuery:
 
+    @staticmethod
     def test_status_code(reasonable_query):
         assert reasonable_query.status_code == 200
