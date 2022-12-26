@@ -1,4 +1,5 @@
 import pytest
+import random
 from numbers import Number
 from src.realty.zillow import Query
 from src.realty.zillow.details import details_page
@@ -268,12 +269,24 @@ class TestScrape:
 
     @staticmethod
     def test_lazy_scraping_indexing(reasonable_sale_results):
-        ...  # TODO
+        lazy_details = lazy_scrape_listings(reasonable_sale_results)
+
+        test_indexes = set(
+            [random.randrange(len(reasonable_sale_results)) for _ in range(3)])
+        for ti in test_indexes:
+            assert isinstance(lazy_details[ti], Sale)
 
     @staticmethod
     def test_lazy_scraping_slicing(reasonable_sale_results):
-        ...  # TODO
+        lazy_details = lazy_scrape_listings(reasonable_sale_results)
+
+        details = lazy_details[:3]
+        for d in details:
+            assert isinstance(d, Sale)
 
     @staticmethod
     def test_lazy_scraping_iterating(reasonable_sale_results):
-        ...  # TODO
+        lazy_details = lazy_scrape_listings(reasonable_sale_results)
+
+        for detail in lazy_details[:min(3, len(lazy_details))]:
+            assert isinstance(detail, Sale)
