@@ -84,9 +84,9 @@ Check back soon for more information.
 
 ### Zillow
 
-Inside `zillow` the `Query` class is used to construct and send query request to Zillow's public API. This then returns listings that correspond to the query parameters.
+Inside `zillow` the `Query` class is used to construct and send query request to Zillow's public API. Once the `Query` is configured as desired, the `get_response` method will return the search results.
 
-TODO specify how to parse listing details
+The search results can then be scraped via the functions `details.crapes_listing` , `details.scrape_listings`, and `details.lazy_scrape_listings`.
 
 ## Installation
 
