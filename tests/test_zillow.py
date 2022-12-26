@@ -27,6 +27,17 @@ def reasonable_sale_results():
     return q.get_response("results")
 
 
+@pytest.fixture(scope="module")
+def reasonable_rental_home_results():
+    q = Query()
+    q.set_page(1) \
+        .set_search_term("Chattanooga, TN") \
+        .set_map_bounds(west=-85.58309022900734, east=-85.18483583447609, south=34.73748469750508, north=35.40678434232889) \
+        .set_filter_preset(for_sale=False, home_type={"SingleFamily"})
+    r = q.get_response(returns='results')
+    return [x for x in r if "homedetails" in x['detailUrl']]
+
+
 class TestQuery:
 
     @staticmethod
@@ -154,7 +165,17 @@ class TestSale:
 
 
 class TestRentalHome:
-    ...  # TODO
+    @staticmethod
+    @pytest.fixture(scope="class")
+    def rental_subset(reasonable_rental_home_results):
+        return [
+            Rental_Home(r['detailUrl']) for r in reasonable_rental_home_results[:3]
+        ]
+
+    @staticmethod
+    def test_init(rental_subset):
+        # just a basic check if init doesn't run into errors
+        rental_subset
 
 
 class TestRentalApartment:
