@@ -6,7 +6,7 @@ from numbers import Number
 from . import Sale, Rental_Home, Rental_Apartment
 
 
-def scrapes_listing(detail_url: str, status_type: Literal["FOR_RENT", "FOR_SALE"]) -> Sale | Rental_Apartment | Rental_Home:
+def scrape_listing(detail_url: str, status_type: Literal["FOR_RENT", "FOR_SALE"]) -> Sale | Rental_Apartment | Rental_Home:
     """Scrapes a listing based on the Zillow Detail URL
 
     Args:
@@ -58,7 +58,7 @@ def scrape_listings(query_results: List[Dict[str, Any]], delay: Number = 0, jitt
     for dtime, (i, result) in zip(delay_array, enumerate(query_results, 1)):
 
         results.append(
-            scrapes_listing(result["detailUrl"], result['statusType'])
+            scrape_listing(result["detailUrl"], result['statusType'])
         )
 
         if verbose:
@@ -77,7 +77,7 @@ class Lazy_Listings(list):
         result = super().__getitem__(n)
 
         if isinstance(result, list):
-            return [scrapes_listing(r["detailUrl"], r['statusType']) for r in result]
+            return [scrape_listing(r["detailUrl"], r['statusType']) for r in result]
         else:
             return scrape_listings(result["detailUrl"], result['statusType'])
 
