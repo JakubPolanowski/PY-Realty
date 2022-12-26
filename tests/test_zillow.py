@@ -1,5 +1,7 @@
 import pytest
 from src.realty.zillow import Query
+from src.realty.zillow.details import details_page
+# from src.realty.zillow import details
 # Since there is no great source of truth, the goal of the tests here are to ensure that a reasonable query will return results in the expected format
 
 
@@ -60,7 +62,31 @@ class TestQuery:
 
 
 class TestDetailsPage:
-    ...  # TODO
+    @staticmethod
+    @pytest.fixture(scope="class")
+    def page(reasonable_sale_results):
+        url = reasonable_sale_results[0]['detailUrl']
+        return details_page.Details_Page.get_page(url)
+
+    @staticmethod
+    def test_get_page_status_code(page):
+        assert page.status_code == 200
+
+    @staticmethod
+    def test_make_soup(page):
+        # This is just to test that no exceptions occur
+        details_page.Details_Page.make_soup(page)
+
+    @staticmethod
+    def test_get_walk_and_bike_score(reasonable_sale_results):
+        zpid = reasonable_sale_results[0]['zpid']
+
+        wb_result = details_page.Details_Page.get_walk_and_bike_score(zpid)
+
+        assert isinstance(wb_result, dict)
+        assert 'property' in wb_result
+        assert 'walkScore' in wb_result['property']
+        assert 'bikeScore' in wb_result['property']
 
 
 class TestNextJSDetailsPage:
