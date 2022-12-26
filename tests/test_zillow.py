@@ -261,14 +261,19 @@ class TestScrape:
             Rental_Apartment
         )
 
+    @staticmethod
     def test_scrape_listings(reasonable_sale_results):
-        ...  # TODO
+        details = scrape_listings(reasonable_sale_results[:3])
+        assert all([isinstance(x, Sale) for x in details])
 
+    @staticmethod
     def test_lazy_scraping_indexing(reasonable_sale_results):
         ...  # TODO
 
+    @staticmethod
     def test_lazy_scraping_slicing(reasonable_sale_results):
         ...  # TODO
 
+    @staticmethod
     def test_lazy_scraping_iterating(reasonable_sale_results):
         ...  # TODO
