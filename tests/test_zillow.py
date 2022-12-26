@@ -3,8 +3,9 @@ from numbers import Number
 from src.realty.zillow import Query
 from src.realty.zillow.details import details_page
 from src.realty.zillow.details import Sale, Rental_Home, Rental_Apartment
-# from src.realty.zillow import details
-# Since there is no great source of truth, the goal of the tests here are to ensure that a reasonable query will return results in the expected format
+from src.realty.zillow import scrape_listing, scrape_listings, lazy_scrape_listings
+
+# Since there is no great source of truth, the goal of the tests here are for the most part just to ensure errors are not encountered when dealing with typical listings/queries
 
 
 @pytest.fixture(scope="module")
@@ -233,4 +234,24 @@ class TestRentalApartment:
 
 
 class TestScrape:
-    ...  # TODO
+
+    def test_scrape_sale(reasonable_sale_results):
+        ...  # TODO
+
+    def test_scrape_rental_home(reasonable_rental_home_results):
+        ...  # TODO
+
+    def test_scrape_rental_apartment(reasonable_rental_apartment_results):
+        ...  # TODO
+
+    def test_scrape_listings(reasonable_sale_results):
+        ...  # TODO
+
+    def test_lazy_scraping_indexing(reasonable_sale_results):
+        ...  # TODO
+
+    def test_lazy_scraping_slicing(reasonable_sale_results):
+        ...  # TODO
+
+    def test_lazy_scraping_iterating(reasonable_sale_results):
+        ...  # TODO
