@@ -16,7 +16,7 @@ Early development. The library is still in early development and is missing key 
   - [ ] Zillow Search Query
     - [x] Implementation
     - [x] Manual Testing
-    - [ ] Unit Testing
+    - [x] Unit Testing
   - [ ] Zillow Listing Details Parsing
     - [x] Property Sale Listing
       - [x] Implementation
