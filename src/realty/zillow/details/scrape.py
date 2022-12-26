@@ -69,9 +69,30 @@ def scrape_listings(query_results: List[Dict[str, Any]], delay: Number = 0, jitt
     return results
 
 
-class Results_Lazy:
-    # TODO
-    # This gets the details for all results, but will only fetch when specific detail is fetched
+class Lazy_Listings(list):
+    """Lazy Listings is a list child class that takes a list of Query results and will return the scraped listing details based on the index or slice.
+    """
 
-    def __init__(self, results: List[Dict[Any, Any]]) -> None:
-        pass  # TODO
+    def __getitem__(self, n):
+        result = super().__getitem__(n)
+
+        if isinstance(result, list):
+            return [scrapes_listing(r["detailUrl"], r['statusType']) for r in result]
+        else:
+            return scrape_listings(result["detailUrl"], result['statusType'])
+
+    def __iter__(self):
+        for result in super().__iter__():
+            yield scrape_listings(result["detailUrl"], result['statusType'])
+
+
+def lazy_scrape_listings(query_results: List[Dict[str, Any]]) -> Lazy_Listings:
+    """Scapes Zillow listing details with Lazy Evaluation. The Lazy_Listing class it returns can be used to scrape the details of the query results list by either iteration or indexing/slicing.
+
+    Args:
+        query_results (List[Dict[str, Any]]): Results of the Query, see Query class
+
+    Returns:
+        Lazy_Listings: Lazy_Listing list of query_results
+    """
+    return Lazy_Listings(query_results)
