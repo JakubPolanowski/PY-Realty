@@ -234,15 +234,32 @@ class TestRentalApartment:
 
 
 class TestScrape:
-
+    @staticmethod
     def test_scrape_sale(reasonable_sale_results):
-        ...  # TODO
+        # this checks if correct class is return and no exception occurs
+        assert isinstance(
+            scrape_listing(
+                reasonable_sale_results[0]["detailUrl"], 'FOR_SALE'),
+            Sale
+        )
 
+    @staticmethod
     def test_scrape_rental_home(reasonable_rental_home_results):
-        ...  # TODO
+        # this checks if correct class is return and no exception occurs
+        assert isinstance(
+            scrape_listing(
+                reasonable_rental_home_results[0]["detailUrl"], 'FOR_RENT'),
+            Rental_Home
+        )
 
+    @staticmethod
     def test_scrape_rental_apartment(reasonable_rental_apartment_results):
-        ...  # TODO
+        # this checks if correct class is return and no exception occurs
+        assert isinstance(
+            scrape_listing(
+                reasonable_rental_apartment_results[0]["detailUrl"], 'FOR_RENT'),
+            Rental_Apartment
+        )
 
     def test_scrape_listings(reasonable_sale_results):
         ...  # TODO
