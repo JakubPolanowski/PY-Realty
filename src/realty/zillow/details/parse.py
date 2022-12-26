@@ -6,8 +6,8 @@ from numbers import Number
 from . import Sale, Rental_Home, Rental_Apartment
 
 
-def parse_listing(detail_url: str, status_type: Literal["FOR_RENT", "FOR_SALE"]) -> Sale | Rental_Apartment | Rental_Home:
-    """Parses a listing based on the Zillow Detail URL
+def scrapes_listing(detail_url: str, status_type: Literal["FOR_RENT", "FOR_SALE"]) -> Sale | Rental_Apartment | Rental_Home:
+    """Scrapes a listing based on the Zillow Detail URL
 
     Args:
         detail_url (str): The URL with the listing detaill
@@ -37,7 +37,18 @@ def parse_listing(detail_url: str, status_type: Literal["FOR_RENT", "FOR_SALE"])
         f"status_type should be either FOR_RENT or FOR_SALE, was {status_type}")
 
 
-def parse_listings(query_results: List[Dict[str, Any]], delay: Number = 0, jitter: Number = 1, verbose=False) -> List[Sale] | List[Rental_Home] | List[Rental_Apartment]:
+def scrape_listings(query_results: List[Dict[str, Any]], delay: Number = 0, jitter: Number = 1, verbose=False) -> List[Sale] | List[Rental_Home] | List[Rental_Apartment]:
+    """Scrapes a list of Zillow Detail URLs
+
+    Args:
+        query_results (List[Dict[str, Any]]): Results of the Query, see Query class
+        delay (Number, optional): The static delay amount. This is to help prevent Zillow from blocking scraping due to high number of requests in rapid succession. Defaults to 0.
+        jitter (Number, optional): The jitter factor for the delay time. Defaults to 1.
+        verbose (bool, optional): If function should be verbose, printing out the progress of parsing the listings. Defaults to False.
+
+    Returns:
+        List[Sale] | List[Rental_Home] | List[Rental_Apartment]: List of scraped listing, which typically will be of one type, Sale, Rental_home, or Rental_Apartment, that being said if multiple types are mixed in query_results, the resulting list will be of multiple types.
+    """
 
     delay_array = delay * np.random.rand(len(query_results)) * jitter
     # last delay should be zero since no more details to scrape
@@ -47,13 +58,15 @@ def parse_listings(query_results: List[Dict[str, Any]], delay: Number = 0, jitte
     for dtime, (i, result) in zip(delay_array, enumerate(query_results, 1)):
 
         results.append(
-            parse_listing(result["detailUrl"], result['statusType'])
+            scrapes_listing(result["detailUrl"], result['statusType'])
         )
 
         if verbose:
             print(f"Parsed {i} of {len(query_results)}, delaying for {dtime}s")
 
         sleep(dtime)
+
+    return results
 
 
 class Results_Lazy:
