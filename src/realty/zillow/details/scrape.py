@@ -79,11 +79,11 @@ class Lazy_Listings(list):
         if isinstance(result, list):
             return [scrape_listing(r["detailUrl"], r['statusType']) for r in result]
         else:
-            return scrape_listings(result["detailUrl"], result['statusType'])
+            return scrape_listing(result["detailUrl"], result['statusType'])
 
     def __iter__(self):
         for result in super().__iter__():
-            yield scrape_listings(result["detailUrl"], result['statusType'])
+            yield scrape_listing(result["detailUrl"], result['statusType'])
 
 
 def lazy_scrape_listings(query_results: List[Dict[str, Any]]) -> Lazy_Listings:
