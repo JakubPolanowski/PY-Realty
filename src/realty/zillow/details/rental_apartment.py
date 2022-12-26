@@ -29,7 +29,7 @@ class Rental_Apartment(NextJS_Detail_Page):
         self.building_name: str = self.building['buildingName']
 
         self.zpid: str = self.building['zpid']
-        self.description: str = self.building['desciption']
+        self.description: str = self.building['description']
         self.low_income: bool = self.building['isLowIncome']
         self.senior_housing: bool = self.building['isSeniorHousing']
         self.student_housing: bool = self.building['isStudentHousing']
