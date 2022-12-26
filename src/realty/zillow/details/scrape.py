@@ -27,7 +27,7 @@ def scrapes_listing(detail_url: str, status_type: Literal["FOR_RENT", "FOR_SALE"
     if status_type == "FOR_RENT":
         if 'homedetails' in detail_url:
             return Rental_Home(detail_url)
-        elif '\\b\\' in detail_url:
+        elif '/b/' in detail_url:
             return Rental_Apartment(f"https://www.zillow.com{detail_url}")
         else:
             raise ValueError(
