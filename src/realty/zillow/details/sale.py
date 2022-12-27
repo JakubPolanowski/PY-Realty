@@ -122,7 +122,7 @@ class Sale(Preload_Detail_Page):
         """
         return principal * (interest * (1+interest)**months) / ((1+interest)**months-1)
 
-    def get_monthly_estimated_cost(self, down: Number, interest: Number = None, months: Number = 30, tax: Number = None, home_insurance: Number = None, mortgage_insurance: Number = 0, hoa_fee: Number = None, utilies: Number = 0) -> Number:
+    def get_monthly_estimated_cost(self, down: Number, interest: Number = None, months: Number = 30*12, tax: Number = None, home_insurance: Number = None, mortgage_insurance: Number = 0, hoa_fee: Number = None, utilies: Number = 0) -> Number:
         """Estimates the monthly cost of buying the property. 
 
         Home insurance Zillow estimation formula based on Zillow javascript code:
@@ -143,6 +143,10 @@ class Sale(Preload_Detail_Page):
         """
         if not interest:
             interest = self.property['mortgageRates']['thirtyYearFixedRate']
+            if interest:  # check if had actual value
+                interest /= 100  # zillow gives as a percentage so need to divide by 100
+            else:
+                interest = 0.06  # just some value to fall back on
 
         mortgage_monthly = self.calculate_monthly_mortgage(
             self.price - down, interest/12, months
