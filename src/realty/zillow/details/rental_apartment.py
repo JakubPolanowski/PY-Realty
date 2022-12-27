@@ -11,8 +11,100 @@ class Rental_Apartment(NextJS_Detail_Page):
     def __init__(self, url: str) -> None:
         """This initializes the Rental_Apartment object, which call a GET request on the Zillow detail URL. 
 
-        Args:
-            url (str): The Zillow Rental Apartments details URL.
+        Attributes:
+            url (str): The detail URL that this class has parsed
+            soup (BeautifulSoup): The html content of this page parsed to a soup object
+
+            ndata (Dict): The __NEXT_DATA__ data dictionary scraped from html soup
+            idata (Dict): The initial data dictionary component of ndata
+            redux_state (Dict): the redux state dictionary component of ndata
+
+            zpid (str): The Zillow property ID
+            lot_id (str): The Zillow lot ID
+
+            data (Dict): The API data dictionary. Will be result of a fresh API call unless no data is returned, in which case will fall back to idata (initial data)
+
+            building (Dict): The building data dictionary, found within data
+            building_attributes (Dict): The building attributes data dictioanry, found within building
+
+            building_name (str): The building name
+
+            description (str): The apartment building description
+            low_income (bool): If apartment building is low income
+            senior_housing (bool): If building is senior housing
+            student_housing (bool): If building is student housing
+
+            office_hours (List[str]): List of the building's office hours
+            office_number (str): The phone number of the building's office
+
+            key_features (Dict): Key features of the building
+            unit_features (List[str]): The universal features of the apartment units
+
+            city (str): The city
+            county (str): The county
+            state (str): The state
+            zip (str): The zip code
+            street_address (str): The street address of the building
+
+            application_fee (Number | None): The application fee
+            administrative_fee (Number | None): The administrative fee 
+            deposit_fee_min (Number | None): The min deposit fee
+            deposit_fee_max (Number | None): The max deposit fee
+            lease_terms (List[str]): The lease teams. Note that is is more a keyword/descriptor as opposed to a legal lease contract terms. So you might expected something like ['Flexable'] if the terms are flexable/negotiable
+            utilities_included (List[str]): The included utilities
+
+            parking_policies (List[dict]): List of parking policies
+            parking_types (List[str]): List of parking types available, for example "off_road"
+            pet_policies (List[dict]): The list of pet policies
+
+            shared_laundry (bool): Is there shared laundry, True/False
+            air_conditioning (str): Air conditioning description
+            appliances (List[str]): List of appliances
+            outdoor_common_areas (List[str]): List of outdoor common areas
+            barbecue (bool): If there a/are barbecue(s) in the common areas, True/False
+            heating_source (str): The heating source
+            elevator (Any): The elevator specification of the building
+            community_rooms (List[str]): List of community rooms available
+            sports_courts (List[str]): List of sports courts available
+            bicycle_storage (Any | None): Bicycle storage specification
+            guest_suite (Any | None): Guest Suite specification
+            storage (Any | None): Storage specification
+            pet_park (Any | None): Pet park specification
+            maintenance_24_7 (Any | None): Specification of 24/7 maintenance availability
+            dry_cleaning_drop_off (Any | None): Specification of dry cleaning drop off availability
+            online_rent_payment (Any | None): Specification of online rent payment availability
+            online_maintenance_portal (Any | None): Specification of online maintenance portal availability
+            onsite_management (bool): If management is onsite, True/False
+            package_service (Any | None): Specification of package service availability
+            valet_trash (Any | None): Specification of valet trash availability
+            spanish_speaking_staff (Any | None): Specification of spanish speaking staff availability
+            security_types (List[str]): The types of security that building has
+            view_types (List[str]): List of views (scenic) that the building has
+            hot_tub (Any | None): Specification of hot tub availability
+            sauna (Any | None): Specification of sauna availability
+            swimming_pool (bool): If has swimming pool, True/False
+            assisted_living (bool): If building has assisted living, True/False
+            disabled_access (Any | None): The specification of disabled access availablity
+            floor_covering (List[str]): The list of floor coverings that the building has
+            communication_types (List[str]): The list of communication types the building has/supports. For instance "high speed internet"
+            ceiling_fan (Any | None): Specification of ceiling fan availability
+            fire_place (Any | None): Specification of fire place availability
+            patio_balcony (bool): If building has patio balcony, True/False
+            furnished (Any | None): Specification of if/how is furnished
+            custom_ammenites (str): Description of custom ammenites
+
+            floorplans (List[dict]): List of available floor plans
+
+            management (dict): Management details
+
+            schools (List[dict]): The list of nearby schools
+            nearby_cities (List[dict]): The list of nearby cities
+            nearby_neighborhoods (List[dict]): The list of nearby neighborhoods
+            nearby_zip (List[dict]): The list of nearby zip codes
+            nearby_rental_buildings (List[dict]): The list of nearby rental homes and apartments
+            nearby_amenities (List[dict]): The list of nearby amenities 
+
+            review_info (dict): The data dictionary of reviews
         """
 
         self.url = url
@@ -58,8 +150,8 @@ class Rental_Apartment(NextJS_Detail_Page):
 
         self.application_fee: Number | None = self.building_attributes['applicationFee']
         self.administrative_fee: Number | None = self.building_attributes['administrativeFee']
-        self.deposite_fee_min: Number | None = self.building_attributes['depositFeeMin']
-        self.deposite_fee_max: Number | None = self.building_attributes['depositFeeMax']
+        self.deposit_fee_min: Number | None = self.building_attributes['depositFeeMin']
+        self.deposit_fee_max: Number | None = self.building_attributes['depositFeeMax']
         self.lease_terms: List[str] = self.building_attributes.get(
             'leaseTerms', [])
         self.utilities_included: List[str] = self.building_attributes.get(
@@ -127,8 +219,8 @@ class Rental_Apartment(NextJS_Detail_Page):
                               ] = self.building.get('nearbyZipcodes', [])
         self.nearby_rental_buildings: List[Dict[str, Any]
                                            ] = self.building.get('nearbyBuildingLinks', [])
-        self.nearby_amenites: List[Dict[str, Any]
-                                   ] = self.building.get('nearbyAmenities', [])
+        self.nearby_amenities: List[Dict[str, Any]
+                                    ] = self.building.get('nearbyAmenities', [])
 
         self.review_info: Dict[str, Any] = self.building.get('reviewsInfo', {})
 
@@ -172,6 +264,15 @@ class Rental_Apartment(NextJS_Detail_Page):
 
     @staticmethod
     def get_management_company(zpid: str) -> Dict[str, Any]:
+        """Gets the management details via a GRAPHQL query
+
+        Args:
+            zpid (str): The zillow ID
+
+        Returns:
+            Dict[str, Any]: The management details JSON
+        """
+
         url = "https://www.zillow.com/graphql"
 
         payload = {
