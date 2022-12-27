@@ -12,12 +12,12 @@ Early development. The library is still in early development and is missing key 
 
 ## Road Map
 
-- [ ] Zillow
+- [x] Zillow
   - [x] Zillow Search Query
     - [x] Implementation
     - [x] Manual Testing
     - [x] Unit Testing
-  - [ ] Zillow Listing Details Parsing
+  - [x] Zillow Listing Details Parsing
     - [x] Property Sale Listing
       - [x] Implementation
       - [x] Manual Testing
@@ -26,10 +26,10 @@ Early development. The library is still in early development and is missing key 
       - [x] Implementation
       - [x] Manual Testing
       - [x] Unit Testing
-    - [ ] Apartment Rental Listing
+    - [x] Apartment Rental Listing
       - [x] Implementation
-      - [ ] Manual Testing
-      - [ ] Unit Testing
+      - [x] Manual Testing
+      - [x] Unit Testing
 - [ ] Realtor.com
   - [ ] Realtor.com Search Query
       - [ ] Implementation
