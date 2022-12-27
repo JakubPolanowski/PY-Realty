@@ -272,11 +272,16 @@ class Preload_Detail_Page(Details_Page):
             Dict[str, Any]: Returns a dictionary of the at a glance facts.
         """
 
-        glance = {}
-        for pair in self.property['resoFacts']['atAGlanceFacts']:
-            glance[pair['factLabel']] = pair['factValue']
+        at_a_glance_dict = self.property['resoFacts']['atAGlanceFacts']
 
-        return glance
+        if at_a_glance_dict:
+            glance = {}
+            for pair in at_a_glance_dict:
+                glance[pair['factLabel']] = pair['factValue']
+
+            return glance
+        else:
+            return {}
 
     def get_tags(self) -> List[str]:
         """Gets the taglines on the page
