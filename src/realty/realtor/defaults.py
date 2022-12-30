@@ -186,3 +186,20 @@ query ConsumerSearchMainQuery(
   }
 }
 """
+
+# This is the request payload for the listing search GRAPHQL API
+# This query setting two fields, 'query' (graphQL query) and 'variables' --> 'query' (which is the filter criteria for the GRAPHQL request)
+LISTING_SEARCH_PAYLOAD = {
+    "query": "",
+    "variables": {
+        "query": {},
+        "client_data": {"device_data": {"device_type": "web"}, "user_data": {}},
+        "limit": 42,
+        "offset": 42,
+        "sort_type": "relevant",
+    },
+    "operationName": "ConsumerSearchMainQuery",
+    "callfrom": "SRP",
+    "nrQueryType": "MAIN_SRP",
+    "isClient": True,
+}
