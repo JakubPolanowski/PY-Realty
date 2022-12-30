@@ -45,6 +45,31 @@ class Query:
         self.payload = payload
         return self
 
+    def set_payload_variables(self, **kwargs) -> 'Query':
+        """Sets variable key value pairs inside the POST request payload. This is not recommended to do manually, for advanced use only.
+
+        Returns:
+            Query: Returns self
+        """
+
+        for key, item in kwargs.items():
+            self.payload['variables'][key] = item
+
+        return self
+
+    def remove_payload_variables(self, *args) -> 'Query':
+        """Removes variable keys inside the POST request payload. This is not recommended to do manually (as in using this function), for advanced use only.
+
+        Returns:
+            Query: Returns self
+        """
+
+        for key in args:
+            if key in self.payload['variables']:
+                self.payload['variables'].pop(key)
+
+        return self
+
     def set_graphql_query(self, query: str = defaults.GRAPHQL_LISTING_SEARCH_QUERY) -> 'Query':
         """Sets the GraphQL query. Note that this is rather complicated as the Realtor PUBLIC API is not documented therefore it is recommended to use the default.
 
