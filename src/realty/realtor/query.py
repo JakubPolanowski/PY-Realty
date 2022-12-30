@@ -73,3 +73,53 @@ class Query:
 
     def set_filter_query_preset(self) -> 'Query':
         ...  # TODO
+
+    def get_payload(self) -> Dict[str, Any]:
+        """Returns the query POST request JSON payload.
+
+        Returns:
+            Dict[str, Any]: The query POST request JSON payload
+        """
+        return self.payload
+
+    def get_post_params(self) -> Dict[str, Any]:
+        """Returns the query POST request parameters.
+
+        Returns:
+            Dict[str, Any]: The query POST request paramters
+        """
+        return self.post_params
+
+    def get_request(self, url: str = defaults.URL, headers: Dict = defaults.HEADER) -> requests.Response:
+        """Sends a POST request to the Realtor.com GRAPHQL PUBLIC API and returns the response.
+
+        Args:
+            url (str, optional): The GRAPHQL API URL. Defaults to defaults.URL.
+            headers (Dict, optional): The header parameters as a dictionary. Defaults to defaults.HEADER.
+
+        Returns:
+            requests.Response: The request response
+        """
+        return requests.post(url, json=self.payload, headers=headers, params=self.post_params)
+
+    def get_response(self, returns: Literal["full", "results"] = "results", url: str = defaults.URL, headers: Dict = defaults.HEADER) -> Dict[str, Any]:
+        """Sends a POST request to Realtor.com GRAPHQL Public API and returns the JSON content of the response.
+
+        Args:
+            returns (Literal[&quot;full&quot;, &quot;results&quot;], optional): This determines if the full json dictionary will be returned ("full") or just the search results ("results"). Note that the search results include the count, total, and 'results' which contains the list of acutal results. Defaults to "results".
+            url (str, optional): The GRAPHQL API URL. Defaults to defaults.URL.
+            headers (Dict, optional): The header parameters as a dictionary. Defaults to defaults.HEADER.
+
+        Returns:
+            Dict[str, Any]: The request response json data
+        """
+
+        data = self.get_request(url, headers).json()
+
+        if returns == "full":
+            return data
+        elif returns == "results":
+            return data.get('data', {}).get('home_search')
+        else:
+            raise ValueError(
+                f"returns param must be either 'full' or 'results', was {returns}")
