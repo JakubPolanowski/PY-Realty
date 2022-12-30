@@ -13,8 +13,6 @@ class Query:
         self.set_json_payload()
         self.set_graphql_query()
 
-        pass  # TODO
-
     def set_post_params(self, post_parms: Dict[str, Any] = {"client_id": "rdc-x", "schema": "vesta"}) -> 'Query':
         """Sets the post request parameters, the dictionary that will be passed to the 'param' parameter in the post request call. The exact effect of these is not entirely clear and therefore it is recommended to left as default.
 
