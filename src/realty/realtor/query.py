@@ -1,7 +1,7 @@
 import requests
 import json
 import requests
-from typing import Dict, Any, List, Literal, Union, Set
+from typing import Dict, Any, List, Literal, Set
 from . import defaults
 
 
@@ -68,6 +68,118 @@ class Query:
             if key in self.payload['variables']:
                 self.payload['variables'].pop(key)
 
+        return self
+
+    def set_var_client_data(self, client_data: Dict[str, Any] = {"device_data": {"device_type": "web"}, "user_data": {}}) -> 'Query':
+        """Sets the 'client_data' var in payload variables. The exact effect of this is not clear, but if this variable is excluded, the response will fail.
+
+        Args:
+            client_data (Dict[str, Any]): The client_data dictionary. Defaults to {"device_data": {"device_type": "web"}, "user_data": {}}
+
+        Returns:
+            Query: Returns self
+        """
+
+        if client_data is None:
+            return self.remove_payload_variables('client_data')
+
+        self.payload['variables']['client_data'] = client_data
+        return self
+
+    def set_var_limit(self, limit: int = 42) -> 'Query':
+        """Sets the limit variable in payload variables. This is the max number of results that will be returned. Note that if a query has less results than the limit, then the number of results will be less than the limit.
+
+        Args:
+            limit (int, optional): The limit. Defaults to 42, which is the realtor.com default.
+
+        Returns:
+            Query: Return self
+        """
+
+        if limit is None:
+            return self.remove_payload_variables('limit')
+
+        self.payload['variables']['limit'] = limit
+        return self
+
+    def set_var_offset(self, offset: int = 0) -> 'Query':
+        """Sets the result offset in the payload variables. This is essentially how pagination works in realtor.com, for instance if the limit is 42, page 2 starts on offset=42 (counting from 0).
+
+        Args:
+            offset (int, optional): The result offset. Defaults to 0.
+
+        Returns:
+            Query: Returns self
+        """
+
+        if offset is None:
+            return self.remove_payload_variables('offset')
+
+        self.payload['variables']['offset'] = offset
+        return self
+
+    def set_var_sort_type(self, sort_type: str | Dict[str, Any]) -> 'Query':
+        """Sets the sort_type in the payload variables. This is an advanced function, for regular usage, use set_var_sort_type_preset.
+
+        Args:
+            sort_type (str | Dict[str, Any]): The sort_type paramter that specifies how the results will be sorted
+
+        Returns:
+            Query: Returns self
+        """
+
+        if sort_type is None:
+            return self.remove_payload_variables('sort_type')
+
+        self.payload['variables']['sort_type'] = sort_type
+        return self
+
+    def set_var_sort_type_preset(self) -> 'Query':
+        ...  # TODO
+
+    def set_var_zoho_query(self, zoho_query: Dict[str, Any]) -> 'Query':
+        """Sets the zohoQuery in payload variables. The effect of this variable is unclear and is not required. For advanced usage only. This function was only included because this variable is used by realtor.com web, although it is excluded from the defaults in the 'Query' class.
+
+        Args:
+            zoho_query (Dict[str, Any]): The zohoQuery
+
+        Returns:
+            Query: Returns self
+        """
+        if zoho_query is None:
+            return self.remove_payload_variables('zohoQuery')
+
+        self.payload['variables']['zohoQuery'] = zoho_query
+        return self
+
+    def set_var_geo_supported_slug(self, geo_supported_slug: Dict[str, Any]) -> 'Query':
+        """Sets the geoSupportedSlug in payload variables. The effect of this variable is unclear and is not required. For advanced usage only. This function was only included because this variable is used by realtor.com web, although it is excluded from the defaults in the 'Query' class.
+
+        Args:
+            geo_supported_slug (Dict[str, Any]): The geoSupportedSlug
+
+        Returns:
+            Query: Returns self
+        """
+        if geo_supported_slug is None:
+            return self.remove_payload_variables('geoSupportedSlug')
+
+        self.payload['variables']['geoSupportedSlug'] = geo_supported_slug
+        return self
+
+    def set_var_by_prop_type(self, by_prop_type: Dict[str, Any]) -> 'Query':
+        """Sets the by_prop_type in payload variables. The effect of this variable is unclear and is not required. For advanced usage only. This function was only included because this variable is used by realtor.com web, although it is excluded from the defaults in the 'Query' class.
+
+        Args:
+            by_prop_type (Dict[str, Any]): The by_prop_type
+
+        Returns:
+            Query: Returns self
+        """
+        if by_prop_type is None:
+            return self.remove_payload_variables('by_prop_type')
+
+        self.payload['variables']['by_prop_type'] = by_prop_type
         return self
 
     def set_graphql_query(self, query: str = defaults.GRAPHQL_LISTING_SEARCH_QUERY) -> 'Query':
