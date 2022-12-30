@@ -290,6 +290,126 @@ class Query:
     def set_filter_query_preset(self) -> 'Query':
         ...  # TODO
 
+    def set_operation_name(self, name: str = "ConsumerSearchMainQuery") -> 'Query':
+        """Sets the operationName in the request payload. Not recommended to change.
+
+        Args:
+            name (str, optional): operationName. Defaults to "ConsumerSearchMainQuery".
+
+        Returns:
+            Query: Returns self
+        """
+
+        if name is None:
+            try:
+                self.payload.pop('operationName')
+            except KeyError:
+                pass
+        else:
+            self.payload['operationName'] = name
+
+        return self
+
+    def set_call_from(self, call_from: str = "SRP") -> 'Query':
+        """Sets the callfrom in the request payload. Not recommended to change.
+
+        Args:
+            call_from (str, optional): call_from. Defaults to "SRP".
+
+        Returns:
+            Query: Returns self
+        """
+
+        if call_from is None:
+            try:
+                self.payload.pop('callfrom')
+            except KeyError:
+                pass
+        else:
+            self.payload['callfrom'] = call_from
+
+        return self
+
+    def set_nr_query_type(self, nr_query_type: str = None) -> 'Query':
+        """Sets the nrQueryType in the request payload. Not recommended to change.
+
+        Args:
+            nr_query_type (str, optional): nr_query_type. Defaults to None.
+
+        Returns:
+            Query: Returns self
+        """
+
+        if nr_query_type is None:
+            try:
+                self.payload.pop('nrQueryType')
+            except KeyError:
+                pass
+        else:
+            self.payload['nrQueryType'] = nr_query_type
+
+        return self
+
+    def set_visitor_id(self, visitor_id: str = None) -> 'Query':
+        """Sets the visitor_id in the request payload. Unless set via this method, no visitor_id will be included in the payload
+
+        Args:
+            visitor_id (str, optional): visitor_id. Defaults to None.
+
+        Returns:
+            Query: Returns self
+        """
+
+        if visitor_id is None:
+            try:
+                self.payload.pop('visitor_id')
+            except KeyError:
+                pass
+        else:
+            self.payload['visitor_id'] = visitor_id
+
+        return self
+
+    def set_is_client(self, is_client: bool = True) -> 'Query':
+        """Sets the isClient in the request payload. Unclear as it what this does.
+
+        Args:
+            is_client (bool, optional): isClient. Defaults to True.
+
+        Returns:
+            Query: Returns self
+        """
+
+        if is_client is None:
+            try:
+                self.payload.pop('isClient')
+            except KeyError:
+                pass
+        else:
+            self.payload['isClient'] = is_client
+
+        return self
+
+    def set_seo_payload(self, seo_payload: Dict[str, Any] = None) -> 'Query':
+        """Sets the seoPayload in the request payload. It is unclear what this does. This is also by default excluded from the payload unless specifically added by this method.
+
+        Args:
+            seo_payload (Dict[str, Any], optional): seoPayload. Defaults to None.
+
+        Returns:
+            Query: Returns self
+        """
+
+        if seo_payload is None:
+            try:
+                self.payload.pop('seoPayload')
+            except KeyError:
+                pass
+        else:
+            self.payload['seoPayload'] = seo_payload
+
+        return self
+
     def get_payload(self) -> Dict[str, Any]:
         """Returns the query POST request JSON payload.
 
