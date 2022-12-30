@@ -57,3 +57,19 @@ class Query:
 
         self.payload['query'] = query
         return self
+
+    def set_filter_query(self, query: Dict[str, Any]) -> 'Query':
+        """Sets the filter query within 'payload' -> 'variables' -> 'query'. This is used to filter which results should be returned by the search. Note that this is a complex function to use as the PUBLIC Realor.com isn't documented therefore using set_filter_query_preset is recommended as it builds a filter query based on simple parameters.
+
+        Args:
+            query (Dict[str, Any]): The filter for the listings query
+
+        Returns:
+            Query: Returns self
+        """
+
+        self.payload['variables']['query'] = query
+        return self
+
+    def set_filter_query_preset(self) -> 'Query':
+        ...  # TODO
