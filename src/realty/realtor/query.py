@@ -119,7 +119,7 @@ class Query:
         return self
 
     def set_var_sort_type(self, sort_type: str | Dict[str, Any]) -> 'Query':
-        """Sets the sort_type in the payload variables. This is an advanced function, for regular usage, use set_var_sort_type_preset.
+        """Sets the sort_type in the payload variables. Note that this is mutually exclusive with sort_type. This is an advanced function, for regular usage, use set_var_sort_preset.
 
         Args:
             sort_type (str | Dict[str, Any]): The sort_type paramter that specifies how the results will be sorted
@@ -134,8 +134,87 @@ class Query:
         self.payload['variables']['sort_type'] = sort_type
         return self
 
-    def set_var_sort_type_preset(self) -> 'Query':
-        ...  # TODO
+    def set_var_sort(self, sort: Dict[str, Any]) -> 'Query':
+        """Sets the sort in payload variables. Note that this is mutually exclusive with sort_type. This function is for advanced usage only, set_var_sort_preset is recommended for regular usage.
+
+        Args:
+            sort (Dict[str, Any]): The sort parameter dictionary
+
+        Returns:
+            Query: Returns self
+        """
+        if sort is None:
+            return self.remove_payload_variables('sort')
+
+        self.payload['variables']['sort'] = sort
+        return self
+
+    def set_var_sort_preset(self, by: Literal["relevant", "price", "listing age", "open house date", "last reduced", "interior sqft", "lot_size"] = "relevant", ascending=False) -> 'Query':
+        """Sets the sorting and therefore the order of the results.
+
+        Args:
+            by (Literal[&quot;relevant&quot;, &quot;price&quot;, &quot;listing age&quot;, &quot;open house date&quot;, &quot;last reduced&quot;, &quot;interior sqft&quot;, &quot;lot_size&quot;], optional): The criteria by which to sort. Defaults to "relevant".
+            ascending (bool, optional): If results should be sorted in ascending order or (False) descening. Note that this doesn't have an effect on 'relevant'. Defaults to False.
+
+        Returns:
+            Query: Returns self
+        """
+
+        sort_direction = 'asc' if ascending else 'desc'
+
+        if by == "relevant":
+            self.set_var_sort(None)
+            return self.set_var_sort_type('relevant')
+        elif by == "price":
+            self.set_var_sort_type(None)
+            return self.set_var_sort(
+                {
+                    "field": "list_price",
+                    "direction": sort_direction,
+                }
+            )
+        elif by == "listing age":
+            self.set_var_sort_type(None)
+            return self.set_var_sort(
+                {
+                    "field": "list_date",
+                    "direction": sort_direction,
+                }
+            )
+        elif by == "open house date":
+            self.set_var_sort_type(None)
+            return self.set_var_sort(
+                {
+                    "field": "open_house_date",
+                    "direction": sort_direction,
+                }
+            )
+        elif by == "last reduced":
+            self.set_var_sort_type(None)
+            return self.set_var_sort(
+                {
+                    "field": "price_reduced_date",
+                    "direction": sort_direction,
+                }
+            )
+        elif by == "interior sqft":
+            self.set_var_sort_type(None)
+            return self.set_var_sort(
+                {
+                    "field": "sqft",
+                    "direction": sort_direction,
+                }
+            )
+        elif by == "lot_size":
+            self.set_var_sort_type(None)
+            return self.set_var_sort(
+                {
+                    "field": "lot_sqft",
+                    "direction": sort_direction,
+                }
+            )
+        else:
+            raise ValueError("Invalid 'by' value")
 
     def set_var_zoho_query(self, zoho_query: Dict[str, Any]) -> 'Query':
         """Sets the zohoQuery in payload variables. The effect of this variable is unclear and is not required. For advanced usage only. This function was only included because this variable is used by realtor.com web, although it is excluded from the defaults in the 'Query' class.
