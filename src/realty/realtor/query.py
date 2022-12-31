@@ -6,7 +6,7 @@ from datetime import datetime
 from . import defaults
 
 
-class Query:
+class Sale_Query:
 
     def __init__(self) -> None:
 
@@ -14,7 +14,7 @@ class Query:
         self.set_json_payload()
         self.set_graphql_query()
 
-    def set_post_params(self, post_parms: Dict[str, Any] = {"client_id": "rdc-x", "schema": "vesta"}) -> 'Query':
+    def set_post_params(self, post_parms: Dict[str, Any] = {"client_id": "rdc-x", "schema": "vesta"}) -> 'Sale_Query':
         """Sets the post request parameters, the dictionary that will be passed to the 'param' parameter in the post request call. The exact effect of these is not entirely clear and therefore it is recommended to left as default.
 
         Args:
@@ -31,7 +31,7 @@ class Query:
 
         return self
 
-    def set_json_payload(self, payload: Dict[str, Any] = defaults.LISTING_SEARCH_PAYLOAD) -> 'Query':
+    def set_json_payload(self, payload: Dict[str, Any] = defaults.LISTING_SEARCH_PAYLOAD) -> 'Sale_Query':
         """Sets the request payload, this is the body of the request, sent as a POST. Note that this is rather complicated as the Realotr PUBLIC API is not documented therefore it is recommended to use the default. Also when setting the payload, there are two key keys that are missing real values, 'query' (GraphQL query - see set_graphql_query) and 'variables' --> 'query' (fitler criteria - see set_filter_query and set_filter_query_preset)
 
         Args:
@@ -44,7 +44,7 @@ class Query:
         self.payload = payload
         return self
 
-    def set_payload_variables(self, **kwargs) -> 'Query':
+    def set_payload_variables(self, **kwargs) -> 'Sale_Query':
         """Sets variable key value pairs inside the POST request payload. This is not recommended to do manually, for advanced use only.
 
         Returns:
@@ -56,7 +56,7 @@ class Query:
 
         return self
 
-    def remove_payload_variables(self, *args) -> 'Query':
+    def remove_payload_variables(self, *args) -> 'Sale_Query':
         """Removes variable keys inside the POST request payload. This is not recommended to do manually (as in using this function), for advanced use only.
 
         Returns:
@@ -69,7 +69,7 @@ class Query:
 
         return self
 
-    def set_var_client_data(self, client_data: Dict[str, Any] = {"device_data": {"device_type": "web"}, "user_data": {}}) -> 'Query':
+    def set_var_client_data(self, client_data: Dict[str, Any] = {"device_data": {"device_type": "web"}, "user_data": {}}) -> 'Sale_Query':
         """Sets the 'client_data' var in payload variables. The exact effect of this is not clear, but if this variable is excluded, the response will fail.
 
         Args:
@@ -85,7 +85,7 @@ class Query:
         self.payload['variables']['client_data'] = client_data
         return self
 
-    def set_var_limit(self, limit: int = 42) -> 'Query':
+    def set_var_limit(self, limit: int = 42) -> 'Sale_Query':
         """Sets the limit variable in payload variables. This is the max number of results that will be returned. Note that if a query has less results than the limit, then the number of results will be less than the limit.
 
         Args:
@@ -101,7 +101,7 @@ class Query:
         self.payload['variables']['limit'] = limit
         return self
 
-    def set_var_offset(self, offset: int = 0) -> 'Query':
+    def set_var_offset(self, offset: int = 0) -> 'Sale_Query':
         """Sets the result offset in the payload variables. This is essentially how pagination works in realtor.com, for instance if the limit is 42, page 2 starts on offset=42 (counting from 0).
 
         Args:
@@ -117,7 +117,7 @@ class Query:
         self.payload['variables']['offset'] = offset
         return self
 
-    def set_var_sort_type(self, sort_type: str | Dict[str, Any]) -> 'Query':
+    def set_var_sort_type(self, sort_type: str | Dict[str, Any]) -> 'Sale_Query':
         """Sets the sort_type in the payload variables. Note that this is mutually exclusive with sort_type. This is an advanced function, for regular usage, use set_var_sort_preset.
 
         Args:
@@ -133,7 +133,7 @@ class Query:
         self.payload['variables']['sort_type'] = sort_type
         return self
 
-    def set_var_sort(self, sort: Dict[str, Any]) -> 'Query':
+    def set_var_sort(self, sort: Dict[str, Any]) -> 'Sale_Query':
         """Sets the sort in payload variables. Note that this is mutually exclusive with sort_type. This function is for advanced usage only, set_var_sort_preset is recommended for regular usage.
 
         Args:
@@ -148,7 +148,7 @@ class Query:
         self.payload['variables']['sort'] = sort
         return self
 
-    def set_var_sort_preset(self, by: Literal["relevant", "price", "listing age", "open house date", "last reduced", "interior sqft", "lot_size"] = "relevant", ascending=False) -> 'Query':
+    def set_var_sort_preset(self, by: Literal["relevant", "price", "listing age", "open house date", "last reduced", "interior sqft", "lot_size"] = "relevant", ascending=False) -> 'Sale_Query':
         """Sets the sorting and therefore the order of the results.
 
         Args:
@@ -215,7 +215,7 @@ class Query:
         else:
             raise ValueError("Invalid 'by' value")
 
-    def set_var_zoho_query(self, zoho_query: Dict[str, Any]) -> 'Query':
+    def set_var_zoho_query(self, zoho_query: Dict[str, Any]) -> 'Sale_Query':
         """Sets the zohoQuery in payload variables. The effect of this variable is unclear and is not required. For advanced usage only. This function was only included because this variable is used by realtor.com web, although it is excluded from the defaults in the 'Query' class.
 
         Args:
@@ -230,7 +230,7 @@ class Query:
         self.payload['variables']['zohoQuery'] = zoho_query
         return self
 
-    def set_var_geo_supported_slug(self, geo_supported_slug: Dict[str, Any]) -> 'Query':
+    def set_var_geo_supported_slug(self, geo_supported_slug: Dict[str, Any]) -> 'Sale_Query':
         """Sets the geoSupportedSlug in payload variables. The effect of this variable is unclear and is not required. For advanced usage only. This function was only included because this variable is used by realtor.com web, although it is excluded from the defaults in the 'Query' class.
 
         Args:
@@ -245,7 +245,7 @@ class Query:
         self.payload['variables']['geoSupportedSlug'] = geo_supported_slug
         return self
 
-    def set_var_by_prop_type(self, by_prop_type: Dict[str, Any]) -> 'Query':
+    def set_var_by_prop_type(self, by_prop_type: Dict[str, Any]) -> 'Sale_Query':
         """Sets the by_prop_type in payload variables. The effect of this variable is unclear and is not required. For advanced usage only. This function was only included because this variable is used by realtor.com web, although it is excluded from the defaults in the 'Query' class.
 
         Args:
@@ -260,7 +260,7 @@ class Query:
         self.payload['variables']['by_prop_type'] = by_prop_type
         return self
 
-    def set_graphql_query(self, query: str = defaults.GRAPHQL_LISTING_SEARCH_QUERY) -> 'Query':
+    def set_graphql_query(self, query: str = defaults.GRAPHQL_LISTING_SEARCH_QUERY) -> 'Sale_Query':
         """Sets the GraphQL query. Note that this is rather complicated as the Realtor PUBLIC API is not documented therefore it is recommended to use the default.
 
         Args:
@@ -273,7 +273,7 @@ class Query:
         self.payload['query'] = query
         return self
 
-    def set_filter_query(self, query: Dict[str, Any]) -> 'Query':
+    def set_filter_query(self, query: Dict[str, Any]) -> 'Sale_Query':
         """Sets the filter query within 'payload' -> 'variables' -> 'query'. This is used to filter which results should be returned by the search. Note that this is a complex function to use as the PUBLIC Realor.com isn't documented therefore using set_filter_query_preset is recommended as it builds a filter query based on simple parameters.
 
         Args:
@@ -377,7 +377,7 @@ class Query:
         keywords: List[str] = None,
         tags: List[str] = [],
         exclude_tags: List[str] = []
-    ) -> 'Query':
+    ) -> 'Sale_Query':
 
         query = {}
 
@@ -593,7 +593,7 @@ class Query:
 
         # TODO
 
-    def set_operation_name(self, name: str = "ConsumerSearchMainQuery") -> 'Query':
+    def set_operation_name(self, name: str = "ConsumerSearchMainQuery") -> 'Sale_Query':
         """Sets the operationName in the request payload. Not recommended to change.
 
         Args:
@@ -613,7 +613,7 @@ class Query:
 
         return self
 
-    def set_call_from(self, call_from: str = "SRP") -> 'Query':
+    def set_call_from(self, call_from: str = "SRP") -> 'Sale_Query':
         """Sets the callfrom in the request payload. Not recommended to change.
 
         Args:
@@ -633,7 +633,7 @@ class Query:
 
         return self
 
-    def set_nr_query_type(self, nr_query_type: str = None) -> 'Query':
+    def set_nr_query_type(self, nr_query_type: str = None) -> 'Sale_Query':
         """Sets the nrQueryType in the request payload. Not recommended to change.
 
         Args:
@@ -653,7 +653,7 @@ class Query:
 
         return self
 
-    def set_visitor_id(self, visitor_id: str = None) -> 'Query':
+    def set_visitor_id(self, visitor_id: str = None) -> 'Sale_Query':
         """Sets the visitor_id in the request payload. Unless set via this method, no visitor_id will be included in the payload
 
         Args:
@@ -673,7 +673,7 @@ class Query:
 
         return self
 
-    def set_is_client(self, is_client: bool = True) -> 'Query':
+    def set_is_client(self, is_client: bool = True) -> 'Sale_Query':
         """Sets the isClient in the request payload. Unclear as it what this does.
 
         Args:
@@ -693,7 +693,7 @@ class Query:
 
         return self
 
-    def set_seo_payload(self, seo_payload: Dict[str, Any] = None) -> 'Query':
+    def set_seo_payload(self, seo_payload: Dict[str, Any] = None) -> 'Sale_Query':
         """Sets the seoPayload in the request payload. It is unclear what this does. This is also by default excluded from the payload unless specifically added by this method.
 
         Args:
