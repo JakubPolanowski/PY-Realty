@@ -2,6 +2,7 @@ import requests
 import json
 import requests
 from typing import Dict, Any, List, Literal, Set
+from datetime import datetime
 from . import defaults
 
 
@@ -285,8 +286,159 @@ class Query:
         self.payload['variables']['query'] = query
         return self
 
-    def set_filter_query_preset(self) -> 'Query':
-        ...  # TODO
+    def set_filter_query_preset(
+        self,
+        search_location: str = None,  # TODO further explore this,
+        state_code: str = None,
+        primary: bool = True,
+        new_construction: bool = None,
+        foreclosure: bool = None,
+        senior_community: bool = None,  # 55+ age
+        contingent: bool = None,
+        has_tour: bool = None,  # virtual toor
+        open_house_date_min: datetime = None,
+        open_house_date_max: datetime = None,
+        list_date_min: datetime = None,
+        list_date_max: datetime = None,
+        price_min: int = None,
+        price_max: int = None,
+        price_reduce_date_min: datetime = None,
+        price_reduce_date_max: datetime = None,
+        hoa_fee_min: int = None,
+        hoa_fee_max: int = None,
+        # if should show properties with incomplete HOA data
+        include_incomplete_hoa: bool = True,
+        bedrooms_min: int = None,
+        bedrooms_max: int = None,
+        bathrooms_min: int = None,
+        bathrooms_max: int = None,
+        status: Set(Literal[
+            "for_sale",
+            "ready_to_build",
+            "sold"
+
+        ]) = {"for_sale"},
+        sold_date_min: datetime = None,
+        sold_date_max: datetime = None,
+        prop_type: Set(Literal[
+            "farm",
+            "mobile",
+            "multi_family",
+            "townhomes",
+            "duplex_triplex",
+            "single_family",
+            "condos",
+            "condo_townhome_rowhome_coop",
+            "condo_townhome",
+            "land"
+        ]) = None,  # all -> not specified in query
+        keywords: List[str] = None
+    ) -> 'Query':
+
+        query = {}
+
+        if search_location:
+            query['search_location'] = {'location': search_location}
+
+        if state_code:
+            query['state_code'] = state_code
+
+        query['primary'] = primary
+
+        if new_construction is not None:
+            query['new_construction'] = new_construction
+
+        if foreclosure is not None:
+            query['foreclosure'] = foreclosure
+
+        if senior_community is not None:
+            if senior_community:
+                query['tags'] = ['senior_community']
+            else:
+                query['exclude_tags'] = ['senior_community']
+
+        if contingent is not None:
+            query['contingent'] = contingent
+
+        if has_tour is not None:
+            query['has_tour'] = has_tour
+
+        if open_house_date_min or open_house_date_max:
+            query['open_house'] = {}
+            if open_house_date_min:
+                query['open_house']['min'] = open_house_date_min.strftime(
+                    "%Y-%m-%d")
+            if open_house_date_max:
+                query['open_house']['max'] = open_house_date_max.strftime(
+                    "%Y-%m-%d")
+
+        if list_date_min or list_date_max:
+            query['list_date'] = {}
+            if list_date_min:
+                query['list_date'] = list_date_min.strftime(
+                    "%Y-%m-%d")
+            if list_date_max:
+                query['list_date'] = list_date_max.strftime(
+                    "%Y-%m-%d")
+
+        if price_min or price_max:
+            query['listing_price'] = {}
+            if price_min:
+                query['listing_price']['min'] = price_min
+            if price_max:
+                query['listing_price']['max'] = price_max
+
+        if price_reduce_date_min or price_reduce_date_max:
+            query['price_reduced_date'] = {}
+            if price_reduce_date_min:
+                query['price_reduced_date']['min'] = price_reduce_date_min.strftime(
+                    "%Y-%m-%d")
+            if price_reduce_date_max:
+                query['price_reduced_date']['max'] = price_reduce_date_max.strftime(
+                    "%Y-%m-%d")
+
+        if hoa_fee_min or hoa_fee_max:
+            if include_incomplete_hoa:
+                hoa_key = "hoa_fee_optional"
+            else:
+                hoa_key = "hoa_fee"
+
+            query[hoa_key] = {}
+            if hoa_fee_min:
+                query[hoa_key]['min'] = hoa_fee_min
+            if hoa_fee_max:
+                query[hoa_key]['max'] = hoa_fee_max
+
+        if bedrooms_min or bedrooms_max:
+            query['beds'] = {}
+            if price_min:
+                query['beds']['min'] = bedrooms_min
+            if price_max:
+                query['beds']['max'] = bedrooms_max
+
+        if bathrooms_min or bathrooms_max:
+            query['baths'] = {}
+            if price_min:
+                query['baths']['min'] = bathrooms_min
+            if price_max:
+                query['baths']['max'] = bathrooms_max
+
+        query['status'] = status
+
+        if sold_date_min or sold_date_max:
+            query['sold_date'] = {}
+            if price_min:
+                query['sold_date']['min'] = sold_date_min
+            if price_max:
+                query['sold_date']['max'] = sold_date_max
+
+        if prop_type:
+            query['type'] = list(prop_type)
+
+        if keywords:
+            query['keywords'] = keywords
+
+        # TODO
 
     def set_operation_name(self, name: str = "ConsumerSearchMainQuery") -> 'Query':
         """Sets the operationName in the request payload. Not recommended to change.
