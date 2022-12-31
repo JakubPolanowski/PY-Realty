@@ -286,9 +286,12 @@ class Query:
         self.payload['variables']['query'] = query
         return self
 
-    def set_filter_query_preset(
+    def set_filter_query_preset(  # search loc, cities, and state code mutually exclusive
         self,
-        search_location: str = None,  # TODO further explore this,
+        search_location: str = None,
+        location_radius: int = None,  # expand by x miles, only if search_location
+        # cluster of one or more cities to include
+        cities: List[Dict[str, str]] = None,
         state_code: str = None,
         primary: bool = True,
         new_construction: bool = None,
@@ -296,6 +299,8 @@ class Query:
         senior_community: bool = None,  # 55+ age
         contingent: bool = None,
         has_tour: bool = None,  # virtual toor
+        single_story: bool = None,
+        multi_story: bool = None,
         open_house_date_min: datetime = None,
         open_house_date_max: datetime = None,
         list_date_min: datetime = None,
@@ -312,6 +317,12 @@ class Query:
         bedrooms_max: int = None,
         bathrooms_min: int = None,
         bathrooms_max: int = None,
+        interior_sqft_min: int = None,
+        interior_sqft_max: int = None,
+        lot_sqft_min: int = None,
+        lot_sqft_max: int = None,
+        year_built_min: int = None,
+        year_built_max: int = None,
         status: Set(Literal[
             "for_sale",
             "ready_to_build",
@@ -340,6 +351,20 @@ class Query:
         if search_location:
             query['search_location'] = {'location': search_location}
 
+            if location_radius:
+                query['search_location']['buffer'] = location_radius
+
+        if cities:
+            for city in cities:
+                if 'city' not in city:
+                    raise KeyError(
+                        "city is a required key when specifying cities")
+                if 'state_code' not in city:
+                    raise KeyError(
+                        'state_code is a required key when specifying cities')
+
+            query['locations'] = cities
+
         if state_code:
             query['state_code'] = state_code
 
@@ -352,16 +377,28 @@ class Query:
             query['foreclosure'] = foreclosure
 
         if senior_community is not None:
+            if 'tags' not in query:
+                query['tags'] = []
+
             if senior_community:
-                query['tags'] = ['senior_community']
+                query['tags'].append('senior_community')
             else:
-                query['exclude_tags'] = ['senior_community']
+                query['exclude_tags'].append('senior_community')
 
         if contingent is not None:
             query['contingent'] = contingent
 
         if has_tour is not None:
             query['has_tour'] = has_tour
+
+        if single_story or multi_story:
+            if 'tags' not in query:
+                query['tags'] = []
+
+            if single_story:
+                query['tags'].append('single_story')
+            if multi_story:
+                query['tags'].append('two_or_more_stories')
 
         if open_house_date_min or open_house_date_max:
             query['open_house'] = {}
@@ -408,6 +445,30 @@ class Query:
                 query[hoa_key]['min'] = hoa_fee_min
             if hoa_fee_max:
                 query[hoa_key]['max'] = hoa_fee_max
+
+        if interior_sqft_max or interior_sqft_min:
+            query['sqft'] = {}
+
+            if interior_sqft_min:
+                query['sqft']['min'] = interior_sqft_min
+            if interior_sqft_max:
+                query['sqft']['max'] = interior_sqft_max
+
+        if lot_sqft_max or lot_sqft_min:
+            query['lot_sqft'] = {}
+
+            if lot_sqft_min:
+                query['lot_sqft']['min'] = lot_sqft_min
+            if lot_sqft_max:
+                query['lot_sqft']['max'] = lot_sqft_max
+
+        if year_built_min or year_built_max:
+            query['year_built'] = {}
+
+            if year_built_min:
+                query['year_built']['min'] = year_built_min
+            if year_built_max:
+                query['year_built']['max'] = year_built_max
 
         if bedrooms_min or bedrooms_max:
             query['beds'] = {}
