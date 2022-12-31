@@ -31,7 +31,11 @@ Early development. The library is still in early development and is missing key 
       - [x] Manual Testing
       - [x] Unit Testing
 - [ ] Realtor.com
-  - [ ] Realtor.com Search Query
+  - [ ] Realtor.com Sale Search Query
+      - [x] Implementation
+      - [ ] Manual Testing
+      - [ ] Unit Testing
+  - [ ] Realtor.com Rental Search Query
       - [ ] Implementation
       - [ ] Manual Testing
       - [ ] Unit Testing
@@ -41,10 +45,6 @@ Early development. The library is still in early development and is missing key 
       - [ ] Manual Testing
       - [ ] Unit Testing
     - [ ] Property Rental Listing
-      - [ ] Implementation
-      - [ ] Manual Testing
-      - [ ] Unit Testing
-    - [ ] Apartment Rental Listing
       - [ ] Implementation
       - [ ] Manual Testing
       - [ ] Unit Testing
