@@ -348,6 +348,20 @@ class Query:
 
         query = {}
 
+        tags = []
+
+        if senior_community is True:
+            tags.append('senior_community')
+        if single_story is True:
+            tags.append('single_story')
+        if multi_story is True:
+            tags.append('two_or_more_stories')
+
+        query['tags'] = tags
+
+        if senior_community is False:
+            query['exclude_tags'].append('senior_community')
+
         if search_location:
             query['search_location'] = {'location': search_location}
 
@@ -376,29 +390,11 @@ class Query:
         if foreclosure is not None:
             query['foreclosure'] = foreclosure
 
-        if senior_community is not None:
-            if 'tags' not in query:
-                query['tags'] = []
-
-            if senior_community:
-                query['tags'].append('senior_community')
-            else:
-                query['exclude_tags'].append('senior_community')
-
         if contingent is not None:
             query['contingent'] = contingent
 
         if has_tour is not None:
             query['has_tour'] = has_tour
-
-        if single_story or multi_story:
-            if 'tags' not in query:
-                query['tags'] = []
-
-            if single_story:
-                query['tags'].append('single_story')
-            if multi_story:
-                query['tags'].append('two_or_more_stories')
 
         if open_house_date_min or open_house_date_max:
             query['open_house'] = {}
