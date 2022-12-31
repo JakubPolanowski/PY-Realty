@@ -323,6 +323,37 @@ class Query:
         lot_sqft_max: int = None,
         year_built_min: int = None,
         year_built_max: int = None,
+        min_garages: int = 0,
+        has_carport: bool = None,
+        has_rv_or_boat_parking: bool = None,
+        has_central_air: bool = None,
+        has_forced_air: bool = None,
+        has_central_heat: bool = None,
+        has_basement: bool = None,
+        has_hardwood_floors: bool = None,
+        has_fireplace: bool = None,
+        has_disability_features: bool = None,
+        has_dining_room: bool = None,
+        has_family_room: bool = None,
+        has_den_or_office: bool = None,
+        has_swimming_pool: bool = None,
+        has_spa_or_hot_tub: bool = None,
+        has_horse_facilities: bool = None,
+        has_hill_or_mountain_view: bool = None,
+        has_ocean_view: bool = None,
+        has_lake_view: bool = None,
+        has_river_view: bool = None,
+        has_golf_course_lot_or_frontage: bool = None,
+        has_corner_lot: bool = None,
+        is_cul_de_sac: bool = None,
+        has_waterfront: bool = None,
+        has_community_swimming_pool: bool = None,
+        has_community_spa_or_hot_tub: bool = None,
+        has_community_golf: bool = None,
+        has_community_security_features: bool = None,
+        has_community_clubhouse: bool = None,
+        has_tennis_court: bool = None,
+        has_community_boat_facilities: bool = None,
         status: Set(Literal[
             "for_sale",
             "ready_to_build",
@@ -343,12 +374,12 @@ class Query:
             "condo_townhome",
             "land"
         ]) = None,  # all -> not specified in query
-        keywords: List[str] = None
+        keywords: List[str] = None,
+        tags: List[str] = [],
+        exclude_tags: List[str] = []
     ) -> 'Query':
 
         query = {}
-
-        tags = []
 
         if senior_community is True:
             tags.append('senior_community')
@@ -356,11 +387,76 @@ class Query:
             tags.append('single_story')
         if multi_story is True:
             tags.append('two_or_more_stories')
-
-        query['tags'] = tags
+        if min_garages >= 1:
+            tags.append(f'garage_{min_garages}_or_more')
+        if has_carport is True:
+            tags.append('carport')
+        if has_rv_or_boat_parking is True:
+            tags.append('rv_or_boat_parking')
+        if has_central_air is True:
+            tags.append('central_air')
+        if has_forced_air is True:
+            tags.append('forced_air')
+        if has_central_heat is True:
+            tags.append('central_heat')
+        if has_basement is True:
+            tags.append('basement')
+        if has_hardwood_floors is True:
+            tags.append('hardwood_floors')
+        if has_fireplace is True:
+            tags.append('fireplace')
+        if has_disability_features is True:
+            tags.append('disability_features')
+        if has_dining_room is True:
+            tags.append('dining_room')
+        if has_family_room is True:
+            tags.append('family_room')
+        if has_den_or_office is True:
+            tags.append('den_or_office')
+        if has_swimming_pool is True:
+            tags.append('swimming_pool')
+        if has_spa_or_hot_tub is True:
+            tags.append('spa_or_hot_tub')
+        if has_horse_facilities is True:
+            tags.append('horse_facilities')
+        if has_hill_or_mountain_view is True:
+            tags.append('hill_or_mountain_view')
+        if has_ocean_view is True:
+            tags.append('ocean_view')
+        if has_lake_view is True:
+            tags.append('lake_view')
+        if has_river_view is True:
+            tags.append('river_view')
+        if has_golf_course_lot_or_frontage is True:
+            tags.append('golf_course_lot_or_frontage')
+        if has_corner_lot is True:
+            tags.append('corner_lot')
+        if is_cul_de_sac is True:
+            tags.append('cul_de_sac')
+        if has_waterfront is True:
+            tags.append('waterfront')
+        if has_community_swimming_pool is True:
+            tags.append('community_swimming_pool')
+        if has_community_spa_or_hot_tub is True:
+            tags.append('community_spa_or_hot_tub')
+        if has_community_golf is True:
+            tags.append('community_golf')
+        if has_community_security_features is True:
+            tags.append('community_security_features')
+        if has_community_clubhouse is True:
+            tags.append('community_clubhouse')
+        if has_tennis_court is True:
+            tags.append('tennis_court')
+        if has_community_boat_facilities is True:
+            tags.append('community_boat_facilities')
 
         if senior_community is False:
-            query['exclude_tags'].append('senior_community')
+            exclude_tags.append('senior_community')
+
+        if tags:
+            query['tags'] = list(set(tags))
+        if exclude_tags:
+            query[exclude_tags] - list(set(exclude_tags))
 
         if search_location:
             query['search_location'] = {'location': search_location}
