@@ -79,6 +79,18 @@ class Query:
         if self.state is not None:
             url += self.get_link_for_state(self.state)
 
+        if self.city is not None:
+            url += self.get_link_for_city(self.city)
+        elif self.county is not None:
+            url += self.get_link_for_county(self.county)
+        elif self.region is not None:
+            url += self.get_link_for_region(self.region)
+
+        if self.property_type is not None:
+            url += self.get_link_for_property(self.property_type)
+
+        # TODO remainder of filters
+
     @staticmethod
     def get_link_for_state(state: str) -> str:
 
@@ -128,3 +140,31 @@ class Query:
 
         city = city.lower().replace(' ', '-')
         return f'/{city}'
+
+    @staticmethod
+    def get_link_for_price(price_min: int | None = None, price_max: int | None = None) -> str:
+        ...  # TODO
+
+    @staticmethod
+    def get_link_for_size(size_min: int | None = None, size_max: int | None = None) -> str:
+        ...  # TODO
+
+    @staticmethod
+    def get_link_for_beds(beds_min: int | None = None, beds_max: int | None = None) -> str:
+        ...  # TODO
+
+    @staticmethod
+    def get_link_for_baths(baths_min: int | None = None, baths_max: int | None = None) -> str:
+        ...  # TODO
+
+    @staticmethod
+    def get_link_for_activity(activity: str) -> str:
+        ...  # TODO
+
+    @staticmethod
+    def get_link_for_sale_type(sale_type: str) -> str:
+        ...  # TODO
+
+    @staticmethod
+    def get_link_for_keywords(keywords: List[str]) -> str:
+        .. TODO
