@@ -76,7 +76,8 @@ class Query:
         if self.state is None and self.property_type is None:
             url += "/land"
 
-        # TODO
+        if self.state is not None:
+            url += self.get_link_for_state(self.state)
 
     @staticmethod
     def get_link_for_state(state: str) -> str:
@@ -86,10 +87,10 @@ class Query:
     @staticmethod
     def get_link_for_property(propety: Set[str] | str) -> str:
 
-        raise NotImplemented
+        raise NotImplemented  # TODO
 
     @staticmethod
-    def format_region(region: str) -> str:
+    def get_link_for_region(region: str) -> str:
         """Formats the region name as needed by the Landwatch api, all lower case, spaces replaced with -, '-region' added at the end.
 
         Args:
@@ -102,7 +103,7 @@ class Query:
         return f'/{region}-region'
 
     @staticmethod
-    def format_county(county: str) -> str:
+    def get_link_for_county(county: str) -> str:
         """Formats the county name as needed by the Landwatch api, all lower case, spaces replaced with -, '-county' added at the end.
 
         Args:
@@ -115,7 +116,7 @@ class Query:
         return f'/{county}-county'
 
     @staticmethod
-    def format_city(city: str) -> str:
+    def get_link_for_city(city: str) -> str:
         """Formats the city name as needed by the Landwatch api, all lower case, spaces replaced with -
 
         Args:
