@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from numbers import Number
 from typing import Dict, Any, Tuple, List
+from datetime import datetime
 from .. import defaults
 
 
@@ -72,6 +73,8 @@ class Sale:
 
         self.noise: str = self.get_noise_metrics(
             self.latitude, self.longitude).get('local_text', 'Unknown')
+
+        self.schools = self.property_details['schools']
 
     @staticmethod
     def get_page(url: str, headers: Dict = defaults.HEADER) -> requests.Response:
@@ -253,3 +256,182 @@ class Sale:
         response = requests.request(
             "POST", url, json=payload, headers=headers, params=querystring)
         return response.data()
+
+    @staticmethod
+    def get_value_estimates(
+        property_id: str,
+        start: datetime = datetime(datetime.now().year-3, 1, 1),
+        end: datetime = datetime.now(),
+        forecast_max: datetime = datetime(
+            datetime.now().year, datetime.now().month + 6, 1),
+        headers: Dict = defaults.HEADER
+    ) -> Dict[str, Any]:
+        """Gets the Realtor.com RealEstimate current and historic property value estimates
+
+        Args:
+            property_id (str): The Realtor.com property ID
+            start (datetime, optional): The start time for the historic range. Defaults to datetime(datetime.now().year-3, 1, 1).
+            end (datetime, optional): The end time for the historic range. Defaults to datetime.now().
+            forecast_max (datetime, optional): The forecasting max. Defaults to datetime(datetime.now().year, datetime.now().month + 6, 1)
+            headers (Dict, optional): The request headers. Incorrect headers may lead to invalid results. It is recommended to leave as default. Defaults to defaults.HEADER.
+
+        Returns:
+            Dict[str, Any]: The Relotr.com RealEstimate data
+        """
+
+        url = "https://www.realtor.com/api/v1/hulk"
+
+        querystring = {"client_id": "rdc-x", "schema": "vesta"}
+
+        payload = {
+            "query": None,
+            "queryLoader": {
+                "appType": "FOR_SALE",
+                "pageType": "LDP",
+                "serviceType": "HOME_ESTIMATES"
+            },
+            "propertyId": property_id,
+            "callfrom": "LDP",
+            "nrQueryType": "HOME_ESTIMATES",
+            "variables": {
+                "propertyId": property_id,
+                "historicalMin": start.strftime("%Y-%m-%d"),
+                "historicalMax": end.strftime("%Y-%m-%d"),
+                "forecastMax": forecast_max.strftime("%Y-%m-%d")
+            },
+            "isClient": True
+        }
+
+        response = requests.request(
+            "POST", url, json=payload, headers=headers, params=querystring)
+        return response.json()
+
+    @staticmethod
+    def get_nearby_home_values(property_id: str, headers: Dict = defaults.HEADER) -> List[Dict[str, Any]]:
+        """Gets a list of nearby homes and their values
+
+        Args:
+            property_id (str): The Realtor.com property ID
+            headers (Dict, optional): The request headers. Incorrect headers may lead to invalid results. It is recommended to leave as default. Defaults to defaults.HEADER.
+
+        Returns:
+            List[Dict[str, Any]]: The list of nearby homes and their values
+        """
+
+        url = "https://www.realtor.com/api/v1/hulk"
+
+        querystring = {"client_id": "rdc-x", "schema": "vesta"}
+
+        payload = {
+            "query": None,
+            "queryLoader": {
+                "appType": "FOR_SALE",
+                "pageType": "LDP",
+                "serviceType": "NEARBY_HOME_VALUES"
+            },
+            "propertyId": property_id,
+            "callfrom": "LDP",
+            "nrQueryType": "NEARBY_HOME_VALUES",
+            "variables": {"query": {
+                "type": "nearby_homes",
+                "property_id": property_id,
+            }},
+            "isClient": True,
+            "isBot": "false"
+        }
+
+        response = requests.request(
+            "POST", url, json=payload, headers=headers, params=querystring)
+        return response.json()['data']['linked_homes']['results']
+
+    def get_similar_homes(property_id: str, headers: Dict = defaults.HEADER) -> Dict[str, Any]:
+        """Gets similar homes
+
+        Args:
+            property_id (str): The Realtor.com property ID
+            headers (Dict, optional): The request headers. Incorrect headers may lead to invalid results. It is recommended to leave as default. Defaults to defaults.HEADER.
+
+        Returns:
+            List[Dict[str, Any]]: Similar
+        """
+
+        url = "https://www.realtor.com/api/v1/hulk"
+
+        querystring = {"client_id": "rdc-x", "schema": "vesta"}
+
+        payload = {
+            "query": None,
+            "propertyId": property_id,
+            "callfrom": "LDP",
+            "nrQueryType": "SIMILAR_HOMES",
+            "ab_test_variation": None,
+            "variables": {
+                "propertyId": property_id,
+                "relatedHomesQuery": {"type": "similar_homes"}
+            },
+            "isClient": True,
+            "queryLoader": {
+                "appType": "FOR_SALE",
+                "pageType": "LDP",
+                "serviceType": "SIMILAR_HOMES"
+            },
+            "isBot": "false"
+        }
+
+        response = requests.request(
+            "POST", url, json=payload, headers=headers, params=querystring)
+        return response.json()['data']['home']['related_homes']
+
+    @staticmethod
+    def get_homes_in_area_with_price(
+        zip_code: str, price_min: int, price_max: int, limit: int = 15, offset: int = 0, headers: Dict = defaults.HEADER
+    ) -> Dict[str, Any]:
+        """Gets homes in a zip code that have a price within the specified range.
+
+        Args:
+            zip_code (str): The zip code to find homes in
+            price_min (int): The minimum price
+            price_max (int): The maximum price
+            limit (int, optional): The limit of the number of results. Defaults to 15 (Realtor.com default)
+            offset (int, optional): The offset on the results. If offset is 2, the first result will be the 3rd result. Defaults to 0.
+            headers (Dict, optional): The request headers. Incorrect headers may lead to invalid results. It is recommended to leave as default. Defaults to defaults.HEADER.
+
+        Returns:
+            Dict[str, Any]: The homes in the zip code with price in range
+        """
+
+        url = "https://www.realtor.com/api/v1/hulk"
+
+        querystring = {"client_id": "rdc-x", "schema": "vesta"}
+
+        payload = {
+            "callfrom": "LDP",
+            "nrQueryType": "HOMES_AROUND_VALUE",
+            "query": None,
+            "queryLoader": {
+                "appType": "FOR_SALE",
+                "pageType": "LDP",
+                "serviceType": "HOMES_AROUND_VALUE"
+            },
+            "variables": {
+                "query": {
+                    "primary": True,
+                    "status": ["for_sale", "ready_to_build"],
+                    "postal_code": zip_code,
+                    "list_price": {
+                        "min": price_min,
+                        "max": price_max
+                    }
+                },
+                "limit": limit,
+                "offset": offset,
+                "sort": {
+                    "field": "list_date",
+                    "direction": "desc"
+                }
+            }
+        }
+
+        response = requests.request(
+            "POST", url, json=payload, headers=headers, params=querystring)
+        return response.json()['data']['home_search']
