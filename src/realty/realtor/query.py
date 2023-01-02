@@ -378,6 +378,83 @@ class Sale_Query:
         tags: List[str] = [],
         exclude_tags: List[str] = []
     ) -> 'Sale_Query':
+        """Sets the filter based on the parameters provided.
+
+        Args:
+            search_location (str, optional): The location to search, for example "Charolette, NC". Mutally exclusive with with 'cities'. Defaults to None. NOTE: Either search_location or cities must be specified for query to succeed
+            location_radius (int, optional): The radius in miles around the search_location to expand the search to. This is in addition to the Realtor.com default scope of the search, so 0 gives the results without any expansion of the search area/circle. Defaults to 0
+            cities (List[Dict[str, str]], optional): List of cities to include in the search. This is mutally exclusive with 'search_location'. Cities are to be specified as [{"city": "CITY_NAME", "state_code": "STATE_CODE}]. NOTE: Either cities or search_location must be specified for query to succeed
+            state_code (str, optional): The state code to filter result to. Defaults to None
+            primary (bool): Unclear what this represents. Realtor.com queries use primary=True. Defaults to True
+            new_construction (bool, optional): If new constructions should be included or excluded. Defaults to None
+            foreclosure (bool, optional): If foreclosures should be included or excluded. Default to None
+            senior_community (bool, optional): If senior_community (55+) properties should be included or excluded. Defaults to None
+            contingent (bool, optional): If properties that have a contingent status should be included or excluded. Defaults to None
+            has_tour (bool, optional): If properties filter properties on if they have a tour or if they do not. Defaults to None
+            single_story (bool, optional): If properties should only be single story. Defaults to None
+            multi_story (bool, optional): If properties should only be multi story. Defaults to None
+            open
+            open_house_date_min (datetime, optional): Filter based on start date range of open houses. Defaults to None
+            open_house_date_max (datetime, optional): Filter based on end date range of open houses. Defaults to None
+            list_date_min (datetime, optional): Filter based on the minumum (at least as old as) listing date. Defaults to None
+            listing_date_max (datetime, optional): Filter absed on the maximum (at most as young as) listing date. Defaults to None
+            price_min (int, optional): The minumum price. Defaults to None
+            price_max (int, optional): The maximum price. Defaults to None
+            hoa_fee_min (int, optional): The minumum hoa fee. Defaults to None
+            hoa_fee_max (int, optional): The maximum hoa fee. Defaults to None
+            include_incomplete_hoa (bool, optional): If houses with incomplete (ergo likely inaccurate) hoa information should be included or filtered out. Defaults to None
+            bedrooms_min (int, optional): The minumum number of bedrooms. Defaults to None
+            bedrooms_max (int, optional): The maximum number of bedrooms. Defaults to None
+            bathrooms_min (int, optional): The minumum number of bathrooms. Defaults to None
+            bathrooms_max (int, optional): The maximum number of bathrooms. Defaults to None
+            interior_sqft_min (int, optional): Interior sqft min. Defaults to None
+            interior_sqft_max (int, optional): Interior sqft max. Defaults to None
+            lot_sqft_min (int, optional): Lot sqft min. Defaults to None
+            lot_sqft_max (int, optional): Lot sqft max. Defaults to None
+            year_built_min (int, optional): Year built min. Defaults to None
+            year_built_max (int, optional): Year built max. Defaults to None
+            min_garages (int, optional): The minimum garages/number of cars that can fit in garage. Defaults to None
+            has_carport (bool, optional): Defaults to None
+            has_rv_or_boat_parking (bool, optional): Defaults to None
+            has_central_air (bool, optional): Defaults to None
+            has_forced_air (bool, optional): Defaults to None
+            has_central_heat (bool, optional): Defaults to None
+            has_basement (bool, optional): Defaults to None
+            has_hardwood_floors (bool, optional): Defaults to None
+            has_fireplace (bool, optional): Defaults to None
+            has_disability_features (bool, optional): Defaults to None
+            has_dining_room (bool, optional): Defaults to None
+            has_family_room (bool, optional): Defaults to None
+            has_den_or_office (bool, optional): Defaults to None
+            has_swimming_pool (bool, optional): Defaults to None
+            has_spa_or_hot_tub (bool, optional): Defaults to None
+            has_horse_facilities (bool, optional): Defaults to None
+            has_hill_or_mountain_view (bool, optional): Defaults to None
+            has_ocean_view (bool, optional): Defaults to None
+            has_lake_view (bool, optional): Defaults to None
+            has_river_view (bool, optional): Defaults to None
+            has_golf_course_lot_or_frontage (bool, optional): Defaults to None
+            has_corner_lot (bool, optional): Defaults to None
+            is_cul_de_sac (bool, optional): Defaults to None
+            has_waterfront (bool, optional): Defaults to None
+            has_community_swimming_pool (bool, optional): Defaults to None
+            has_community_spa_or_hot_tub (bool, optional): Defaults to None
+            has_community_golf (bool, optional): Defaults to None
+            has_community_security_features (bool, optional): Defaults to None
+            has_community_clubhouse (bool, optional): Defaults to None
+            has_tennis_court (bool, optional): Defaults to None
+            has_community_boat_facilities (bool, optional): Defaults to None
+            status (Set["for_sale" | "ready_to_build" | "sold"]): Filter based on status. Defaults to ('for_sale')
+            sold_date_min (datetime, optional): The sold date is min/start of range. Note that this only works if status is 'sold'. Defaults to None
+            sold_date_max (datetime, optional): The sold date max/end of range. Note that this only works if status is 'sold'. Defaults to None
+            prop_type (Set["farm" | "mobile" | "multi_family" | "townhomes" | "duplex_triplex" | "single_family" | "condos" | "condo_townhome_rowhome_coop" | "condo_townhome" | "land"]): The property types to include. Defaults to None (includes all)
+            keywords (List[str]): List of keywords to require properties to have. Defaults to None
+            tags (List[str]): List of tags to require properties to have. Defaults to None
+            exlcude_tag (List[str]): List of tags require properties to NOT have. Defaults to None
+
+        Returns:
+            Sale_Query: Returns self
+        """
 
         query = {}
 
