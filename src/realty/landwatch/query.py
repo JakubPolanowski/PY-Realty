@@ -1,6 +1,7 @@
 import requests
 from typing import List, Literal, Set
 from . import defaults
+import re
 
 
 class Query:
@@ -251,4 +252,25 @@ class Query:
 
     @staticmethod
     def get_link_for_keywords(keywords: List[str]) -> str:
-        ...  # TODO
+        """Gets the link for filtering based on specified keywords
+
+        Args:
+            keywords (List[str]): Keywords. Note that keywords can only be alphanumeric, no spaces or symbols. Keywords are case insensitive
+
+        Raises:
+            ValueError: Invalid keyword format
+
+        Returns:
+            str: Keyword filter link
+        """
+
+        link = '/keyword'
+
+        for keyword in keywords:
+            if re.match(r'[A-Za-z0-9]+', keyword):
+                link += f'-{keyword.lower()}'
+            else:
+                raise ValueError(
+                    f'Keywords must be alphanumeric with no spaces or symbols, keyword "{keyword}" was not')
+
+        return link
