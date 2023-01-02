@@ -168,7 +168,7 @@ class Query:
 
         Args:
             size_min (int | None, optional): Size min in Acres. Defaults to None.
-            size_max (int | None, optional): Size mac in acres. Defaults to None.
+            size_max (int | None, optional): Size max in acres. Defaults to None.
 
         Returns:
             str: The link for the size filter
@@ -184,19 +184,70 @@ class Query:
 
     @staticmethod
     def get_link_for_beds(beds_min: int | None = None, beds_max: int | None = None) -> str:
-        ...  # TODO
+        """Gets the link for the number of beds filter
+
+        Args:
+            beds_min (int | None, optional): Min number of beds. Defaults to None.
+            beds_max (int | None, optional): Max number of beds. Defaults to None.
+
+        Returns:
+            str: The link for the number of beds filter
+        """
+        if beds_max is not None and beds_min is not None:
+            return f'/beds-{beds_min}-{beds_max}'
+        elif beds_max is not None:
+            return f'/beds-under-{beds_max}'
+        elif beds_min is not None:
+            return f'/beds-over-{beds_min}'
+        else:
+            return ''
 
     @staticmethod
     def get_link_for_baths(baths_min: int | None = None, baths_max: int | None = None) -> str:
-        ...  # TODO
+        """Gets the link for the number of baths filter
+
+        Args:
+            baths_min (int | None, optional): Min number of baths. Defaults to None.
+            baths_max (int | None, optional): Max number of baths. Defaults to None.
+
+        Returns:
+            str: The link for the number of baths filter
+        """
+        if baths_max is not None and baths_min is not None:
+            return f'/baths-{baths_min}-{baths_max}'
+        elif baths_max is not None:
+            return f'/baths-under-{baths_max}'
+        elif baths_min is not None:
+            return f'/baths-over-{baths_min}'
+        else:
+            return ''
 
     @staticmethod
     def get_link_for_activity(activity: str) -> str:
         ...  # TODO
 
     @staticmethod
-    def get_link_for_sale_type(sale_type: str) -> str:
-        ...  # TODO
+    def get_link_for_sale_type(sale_type: Literal['sale', 'auction', 'both']) -> str:
+        """Gets the link for the specified sale type
+
+        Args:
+            sale_type (Literal[&#39;sale&#39;, &#39;auction&#39;, &#39;both&#39;]): The sale type
+
+        Raises:
+            ValueError: Invalid sale type given
+
+        Returns:
+            str: the link for the specified sale type
+        """
+
+        if sale_type == 'both':
+            return ''
+        elif sale_type == 'sale':
+            return '/for-sale'
+        elif sale_type == 'auction':
+            return '/auctions'
+        else:
+            raise ValueError('Invalid sale type')
 
     @staticmethod
     def get_link_for_keywords(keywords: List[str]) -> str:
