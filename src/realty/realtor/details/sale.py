@@ -92,7 +92,7 @@ class Sale:
         # quick access values
 
         self.property_id: str = self.property_details['property_id']
-        self.listing_date: str = self.property_details['listing_date']
+        self.listing_date: str = self.property_details['list_date']
 
         self.status: str = self.property_details['status']
         self.price: int = self.property_details['list_price']
