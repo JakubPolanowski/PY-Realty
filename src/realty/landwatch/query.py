@@ -143,7 +143,15 @@ class Query:
 
     @staticmethod
     def get_link_for_price(price_min: int | None = None, price_max: int | None = None) -> str:
-        ...  # TODO
+
+        if price_max is not None and price_min is not None:
+            return f'/price-{price_min}-{price_max}'
+        elif price_max is not None:
+            return f'/price-under-{price_min}'
+        elif price_min is not None:
+            return f'/price-over-{price_max}'
+        else:
+            return ''
 
     @staticmethod
     def get_link_for_size(size_min: int | None = None, size_max: int | None = None) -> str:
@@ -167,4 +175,4 @@ class Query:
 
     @staticmethod
     def get_link_for_keywords(keywords: List[str]) -> str:
-        .. TODO
+        ...  # TODO
