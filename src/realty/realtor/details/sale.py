@@ -75,6 +75,7 @@ class Sale:
             self.latitude, self.longitude).get('local_text', 'Unknown')
 
         self.schools = self.property_details['schools']
+        self.similar = self.get_similar_homes(self.property_id)
 
     @staticmethod
     def get_page(url: str, headers: Dict = defaults.HEADER) -> requests.Response:
@@ -344,6 +345,7 @@ class Sale:
             "POST", url, json=payload, headers=headers, params=querystring)
         return response.json()['data']['linked_homes']['results']
 
+    @staticmethod
     def get_similar_homes(property_id: str, headers: Dict = defaults.HEADER) -> Dict[str, Any]:
         """Gets similar homes
 
