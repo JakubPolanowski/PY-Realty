@@ -354,15 +354,15 @@ class Sale_Query:
         has_community_clubhouse: bool = None,
         has_tennis_court: bool = None,
         has_community_boat_facilities: bool = None,
-        status: Set(Literal[
+        status: Set[Literal[
             "for_sale",
             "ready_to_build",
             "sold"
 
-        ]) = {"for_sale"},
+        ]] = {"for_sale"},
         sold_date_min: datetime = None,
         sold_date_max: datetime = None,
-        prop_type: Set(Literal[
+        prop_type: Set[Literal[
             "farm",
             "mobile",
             "multi_family",
@@ -373,7 +373,7 @@ class Sale_Query:
             "condo_townhome_rowhome_coop",
             "condo_townhome",
             "land"
-        ]) = None,  # all -> not specified in query
+        ]] = None,  # all -> not specified in query
         keywords: List[str] = None,
         tags: List[str] = [],
         exclude_tags: List[str] = []
@@ -729,7 +729,7 @@ class Sale_Query:
         """
         return self.post_params
 
-    def get_request(self, url: str = defaults.URL, headers: Dict = defaults.HEADER) -> requests.Response:
+    def get_request(self, url: str = defaults.SEARCH_URL, headers: Dict = defaults.HEADER) -> requests.Response:
         """Sends a POST request to the Realtor.com GRAPHQL PUBLIC API and returns the response.
 
         Args:
@@ -741,7 +741,7 @@ class Sale_Query:
         """
         return requests.post(url, json=self.payload, headers=headers, params=self.post_params)
 
-    def get_response(self, returns: Literal["full", "results"] = "results", url: str = defaults.URL, headers: Dict = defaults.HEADER) -> Dict[str, Any]:
+    def get_response(self, returns: Literal["full", "results"] = "results", url: str = defaults.SEARCH_URL, headers: Dict = defaults.HEADER) -> Dict[str, Any]:
         """Sends a POST request to Realtor.com GRAPHQL Public API and returns the JSON content of the response.
 
         Args:
