@@ -31,18 +31,18 @@ Early development. The library is still in early development and is missing key 
       - [x] Manual Testing
       - [x] Unit Testing
 - [ ] Realtor.com
-  - [ ] Realtor.com Sale Search Query
+  - [x] Realtor.com Sale Search Query
       - [x] Implementation
       - [x] Manual Testing
-      - [ ] Unit Testing
+      - [x] Unit Testing
   - [ ] Realtor.com Rental Search Query
       - [ ] Implementation
       - [ ] Manual Testing
       - [ ] Unit Testing
-  - [ ] Property Sale Listing
+  - [x] Property Sale Listing
     - [x] Implementation
     - [x] Manual Testing
-    - [ ] Unit Testing
+    - [x] Unit Testing
   - [ ] Property Rental Listing
     - [ ] Implementation
     - [ ] Manual Testing
