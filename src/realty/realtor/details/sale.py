@@ -8,6 +8,61 @@ from .. import defaults
 
 
 class Sale:
+    """This class extracts the properties/details of for sale property from Realtor.com's detail URL page.
+
+    While most of the key details can be easily accessed via the class attribute or functions, there are some bit of data that are not readily assigned to class attributes. This includes details of appliances, which can be found in the details attribute (Dict[str, Any]).
+
+    Attribute:
+        url (str): The detail URL that this class has parsed
+        soup (BeautifulSoup): The html content of this page parsed to a soup object
+
+        ndata (Dict): The __NEXT_DATA__ data dictionary pulled from the html soup
+        initial_state (Dict): The initial state dictionary component of ndata
+        property_details (Dict): propertyDetails component of the initial_state dictionary
+        description (Dict): description component of the property_details dictionary. Contains key value pairs regarding to the description of the property
+        location (Dict): location component of the property_details dictionary. Contains key value pairs regarding to the location of the property
+
+        property_id (str): The realtor.com property id
+        listing_date (str): The date the property was listed
+
+        status (str): The status of the property
+        price (int): The price of the property, in USD
+        price_per_sqft (int): The price per sqft, rounded, in USD
+        yearly_property_tax (Number): The yearly property tax - how much tax is paid on the property each year
+        open_houses (Any): The open house information
+
+        listing_description (str): The text description of the property
+        details (Dict[str, Any]): The details of the property, including appliances, cooling, septic, etc.
+        beds (int): Number of bedrooms
+        baths (int): Number of bathrooms
+        garage (int): The number of garages/number of car spaces that fit in the garage
+        interior_sqft (int): The total sqft area of the interior
+        lot_sqft (int): The total sqft area of the lot
+
+        address (Dict[str, Any]): Data dictionary of key value pairs relating to the property's address
+        city (str): The city 
+        state_code (str): The state code
+        state (str): The state
+        county (str): The county
+        latitude (float): The latitude coordinate of the property
+        longitude (float): The longitude coordinate of the property
+        zip (str): The zip code
+        street_address (str): The street address
+        fips (str): Federal Information Processing System code
+
+        hoa_fee (int): The hoa fee (0 if none)
+
+        property_history (List[Dict]): The property history (include sales, listing added, removed, etc.)
+        tax_history (List[Dict]): The tax history of the property
+
+        area_market_status (Dict): Realtor.com's description of the area's market status (for example it may state the housing market is 'hot')
+
+        noise (str): The noise level status in the area
+
+        schools (Dict): Nearby schools
+        similar (Dict): Similar homes, according to Realtor.com
+
+    """
 
     def __init__(self, url: str) -> None:
         """This initializes the Preload_Detail_Page object, which call a GET request on the Zillow detail URL. 
@@ -25,12 +80,14 @@ class Sale:
         self.ndata = self.get_next_data(self.soup)
 
         # get initialState and propertyDetails
-        self.initial_state = self.ndata['props']['pageProps']['initialState']
-        self.property_details = self.initial_state['propertyDetails']
+        self.initial_state: Dict[str,
+                                 Any] = self.ndata['props']['pageProps']['initialState']
+        self.property_details: Dict[str,
+                                    Any] = self.initial_state['propertyDetails']
 
-        # description
-        self.description = self.property_details['description']
-        self.location = self.property_details['location']
+        # additional important keys
+        self.description: Dict[str, Any] = self.property_details['description']
+        self.location: Dict[str, Any] = self.property_details['location']
 
         # quick access values
 
@@ -44,37 +101,39 @@ class Sale:
         self.year_built: int = self.description['year_built']
         self.open_houses: Any = self.property_details['open_houses']
 
-        self.listing_description = self.description['text']
-        self.details = self.property_details['details']
+        self.listing_description: str = self.description['text']
+        self.details: Dict[str, Any] = self.property_details['details']
         self.beds: int = self.description['beds']
         self.baths: int = self.description['baths']
         self.garage: int = self.description['garage']
         self.interior_sqft: int = self.description['sqft']
         self.lot_sqft: int = self.description['lot_sqft']
 
-        self.address = self.location['address']
-        self.city = self.address['city']
-        self.state_code = self.address['state_code']
-        self.state = self.address['state']
-        self.county = self.address['county']
-        self.latitude = self.address['coordinate']['lat']
-        self.longitude = self.address['coordinate']['lon']
-        self.zip = self.address['postal_code']
+        self.address: Dict[str, Any] = self.location['address']
+        self.city: str = self.address['city']
+        self.state_code: str = self.address['state_code']
+        self.state: str = self.address['state']
+        self.county: str = self.address['county']
+        self.latitude: float = self.address['coordinate']['lat']
+        self.longitude: float = self.address['coordinate']['lon']
+        self.zip: str = self.address['postal_code']
         self.street_address = f"{self.address['line']}, {self.city}, {self.state_code} {self.zip}"
         self.fips: str = self.location['county']['fips_code']
 
         self.hoa_fee: int = self.property_details['hoa'].get('fee', 0)
 
-        self.property_history = self.property_details['property_history']
-        self.tax_history = self.property_details['tax_history']
+        self.property_history: List[Dict[str, Any]
+                                    ] = self.property_details['property_history']
+        self.tax_history: List[Dict[str, Any]
+                               ] = self.property_details['tax_history']
 
-        self.area_market_status = self.location.get('postal_code', {}).get(
+        self.area_market_status: Dict[str, Any] = self.location.get('postal_code', {}).get(
             'geo_statistics', {}).get('housing_market')
 
         self.noise: str = self.get_noise_metrics(
             self.latitude, self.longitude).get('local_text', 'Unknown')
 
-        self.schools = self.property_details['schools']
+        self.schools: Dict[str, Any] = self.property_details['schools']
         self.similar = self.get_similar_homes(self.property_id)
 
     @staticmethod
