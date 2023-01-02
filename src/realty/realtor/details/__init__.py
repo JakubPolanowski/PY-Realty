@@ -1,0 +1,1 @@
+from .sale import Sale
