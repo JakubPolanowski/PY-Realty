@@ -143,19 +143,44 @@ class Query:
 
     @staticmethod
     def get_link_for_price(price_min: int | None = None, price_max: int | None = None) -> str:
+        """Gets the link for the price filter.
+
+        Args:
+            price_min (int | None, optional): Min price in USD. Defaults to None.
+            price_max (int | None, optional): Max price in USD. Defaults to None.
+
+        Returns:
+            str: the link
+        """
 
         if price_max is not None and price_min is not None:
             return f'/price-{price_min}-{price_max}'
         elif price_max is not None:
-            return f'/price-under-{price_min}'
+            return f'/price-under-{price_max}'
         elif price_min is not None:
-            return f'/price-over-{price_max}'
+            return f'/price-over-{price_min}'
         else:
             return ''
 
     @staticmethod
     def get_link_for_size(size_min: int | None = None, size_max: int | None = None) -> str:
-        ...  # TODO
+        """Gets the link for the lot size filter
+
+        Args:
+            size_min (int | None, optional): Size min in Acres. Defaults to None.
+            size_max (int | None, optional): Size mac in acres. Defaults to None.
+
+        Returns:
+            str: The link for the size filter
+        """
+        if size_max is not None and size_min is not None:
+            return f'/acres-{size_min}-{size_max}'
+        elif size_max is not None:
+            return f'/acres-under-{size_max}'
+        elif size_min is not None:
+            return f'/acres-over-{size_min}'
+        else:
+            return ''
 
     @staticmethod
     def get_link_for_beds(beds_min: int | None = None, beds_max: int | None = None) -> str:
