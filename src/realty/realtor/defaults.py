@@ -1,6 +1,17 @@
 # URL for graphQL listing serach requests
 SEARCH_URL = "https://www.realtor.com/api/v1/hulk_main_srp"
 
+HEADER = {
+    "authority": "www.realtor.com",
+    "accept": "*/*",
+    "accept-language": "en-US,en;q=0.9",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-origin",
+    "sec-gpc": "1",
+    "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36"
+}
+
 GRAPHQL_HEADER = {
     "authority": "www.realtor.com",
     "accept": "application/json",
