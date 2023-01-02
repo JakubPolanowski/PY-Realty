@@ -653,7 +653,7 @@ class Sale_Query:
             if price_max:
                 query['baths']['max'] = bathrooms_max
 
-        query['status'] = status
+        query['status'] = list(status)
 
         if sold_date_min or sold_date_max:
             query['sold_date'] = {}
