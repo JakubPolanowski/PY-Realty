@@ -286,7 +286,7 @@ class Sale:
 
         response = requests.request(
             "POST", url, json=payload, headers=headers, params=querystring)
-        return response.data()
+        return response.json()
 
     @staticmethod
     def get_fire_risk(property_id: str, headers: Dict = defaults.HEADER) -> Dict[str, Any]:
@@ -315,7 +315,7 @@ class Sale:
 
         response = requests.request(
             "POST", url, json=payload, headers=headers, params=querystring)
-        return response.data()
+        return response.json()
 
     @staticmethod
     def get_value_estimates(
