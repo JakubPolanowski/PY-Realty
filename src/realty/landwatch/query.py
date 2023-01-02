@@ -6,6 +6,60 @@ import re
 
 class Query:
 
+    state_dict = {
+        "texas": "/texas-land-for-sale",
+        "florida": "/florida-land-for-sale",
+        "georgia": "/georgia-land-for-sale",
+        "north carolina": "/north-carolina-land-for-sale",
+        "california": "/california-land-for-sale",
+        "tennessee": "/tennessee-land-for-sale",
+        "south carolina": "/south-carolina-land-for-sale",
+        "michigan": "/michigan-land-for-sale",
+        "arizona": "/arizona-land-for-sale",
+        "new york": "/new-york-land-for-sale",
+        "arkansas": "/arkansas-land-for-sale",
+        "virginia": "/virginia-land-for-sale",
+        "kentucky": "/kentucky-land-for-sale",
+        "missouri": "/missouri-land-for-sale",
+        "oklahoma": "/oklahoma-land-for-sale",
+        "pennsylvania": "/pennsylvania-land-for-sale",
+        "indiana": "/indiana-land-for-sale",
+        "wisconsin": "/wisconsin-land-for-sale",
+        "alabama": "/alabama-land-for-sale",
+        "ohio": "/ohio-land-for-sale",
+        "illinois": "/illinois-land-for-sale",
+        "oregon": "/oregon-land-for-sale",
+        "mississippi": "/mississippi-land-for-sale",
+        "colorado": "/colorado-land-for-sale",
+        "idaho": "/idaho-land-for-sale",
+        "new mexico": "/new-mexico-land-for-sale",
+        "minnesota": "/minnesota-land-for-sale",
+        "iowa": "/iowa-land-for-sale",
+        "louisiana": "/louisiana-land-for-sale",
+        "nevada": "/nevada-land-for-sale",
+        "utah": "/utah-land-for-sale",
+        "maryland": "/maryland-land-for-sale",
+        "montana": "/montana-land-for-sale",
+        "new jersey": "/new-jersey-land-for-sale",
+        "washington": "/washington-land-for-sale",
+        "west virginia": "/west-virginia-land-for-sale",
+        "kansas": "/kansas-land-for-sale",
+        "maine": "/maine-land-for-sale",
+        "connecticut": "/connecticut-land-for-sale",
+        "new hampshire": "/new-hampshire-land-for-sale",
+        "massachusetts": "/massachusetts-land-for-sale",
+        "wyoming": "/wyoming-land-for-sale",
+        "south dakota": "/south-dakota-land-for-sale",
+        "delaware": "/delaware-land-for-sale",
+        "vermont": "/vermont-land-for-sale",
+        "hawaii": "/hawaii-land-for-sale",
+        "alaska": "/alaska-land-for-sale",
+        "nebraska": "/nebraska-land-for-sale",
+        "north dakota": "/north-dakota-land-for-sale",
+        "rhode island": "/rhode-island-land-for-sale",
+        "district of columbia": "/district-of-columbia-land-for-sale",
+    }
+
     def __init__(self) -> None:
 
         self.state: str | None = None
@@ -92,10 +146,14 @@ class Query:
 
         # TODO remainder of filters
 
-    @staticmethod
-    def get_link_for_state(state: str) -> str:
+    @classmethod
+    def get_link_for_state(cls, state: str) -> str:
 
-        raise NotImplemented  # TODO
+        try:
+            return cls.state_dict[state.lower()]
+        except KeyError:
+            raise ValueError(
+                f'{state} is not a valid state name, valid state names are {", ".join(cls.state_dict.keys())}')
 
     @staticmethod
     def get_link_for_property(propety: Set[str] | str) -> str:
