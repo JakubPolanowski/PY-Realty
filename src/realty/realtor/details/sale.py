@@ -33,6 +33,7 @@ class Sale:
 
         # quick access values
 
+        self.property_id: str = self.property_details['property_id']
         self.listing_date: str = self.property_details['listing_date']
 
         self.status: str = self.property_details['status']
@@ -198,3 +199,57 @@ class Sale:
         response = requests.get(noise_query).json()
 
         return response['result']
+
+    @staticmethod
+    def get_flood_risk(property_id: str, headers: Dict = defaults.HEADER) -> Dict[str, Any]:
+        """Gets the flood risk from Realtor.com's PUBLIC API
+
+        Args:
+            property_id (str): The Realtor.com property ID
+            headers (Dict, optional): The request headers. Incorrect headers may lead to invalid results. It is recommended to leave as default. Defaults to defaults.HEADER.
+
+        Returns:
+            Dict[str, Any]: The flood risk data
+        """
+
+        url = "https://www.realtor.com/api/v1/hulk"
+
+        querystring = {"client_id": "rdc-x", "schema": "vesta"}
+
+        payload = {
+            "query": "query GetLocalData($propertyId: ID!) {  home(property_id: $propertyId) {    local {      flood {        fsid        flood_factor_score        flood_factor_severity        flood_cumulative_30        flood_trend        flood_trend_paragraph        fema_zone        firststreet_url        flood_insurance_text        environmental_risk      trend_direction      insurance_requirement      insurance_rates {          provider_logo          provider_url          providers        }        insurance_quotes {          provider_name          provider_url          provider_logo          expires          price          home_coverage          contents_coverage          disclaimer        }      }    }  }}",
+            "variables": {"propertyId": property_id}
+        }
+
+        response = requests.request(
+            "POST", url, json=payload, headers=headers, params=querystring)
+        return response.data()
+
+    @staticmethod
+    def get_fire_risk(property_id: str, headers: Dict = defaults.HEADER) -> Dict[str, Any]:
+        """Gets the fire risk from Realtor.com's PUBLIC API
+
+        Args:
+            property_id (str): The Realtor.com property ID
+            headers (Dict, optional): The request headers. Incorrect headers may lead to invalid results. It is recommended to leave as default. Defaults to defaults.HEADER.
+
+        Returns:
+            Dict[str, Any]: The fire risk data
+        """
+
+        url = "https://www.realtor.com/api/v1/hulk"
+
+        querystring = {"client_id": "rdc-x", "schema": "vesta"}
+
+        payload = {
+            "query": "query GetLocalData($propertyId: ID!) {  home(property_id: $propertyId) {    local {      wildfire {        fsid        fire_factor_score        fire_factor_severity        fire_cumulative_30        fire_trend        fire_trend_paragraph        usfs_relative_risk        firststreet_url        fire_insurance_text        insurance_rates {          provider_logo          provider_url          providers        }      }    }  }}",
+            "propertyId": property_id,
+            "callfrom": "LDP",
+            "nrQueryType": "WILDFIRE_RISK",
+            "variables": {"propertyId": property_id},
+            "isClient": True
+        }
+
+        response = requests.request(
+            "POST", url, json=payload, headers=headers, params=querystring)
+        return response.data()
