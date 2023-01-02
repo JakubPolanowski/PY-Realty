@@ -668,7 +668,8 @@ class Sale_Query:
         if keywords:
             query['keywords'] = keywords
 
-        # TODO
+        self.payload['variables']['query'] = query
+        return self
 
     def set_operation_name(self, name: str = "ConsumerSearchMainQuery") -> 'Sale_Query':
         """Sets the operationName in the request payload. Not recommended to change.
