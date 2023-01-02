@@ -39,15 +39,14 @@ Early development. The library is still in early development and is missing key 
       - [ ] Implementation
       - [ ] Manual Testing
       - [ ] Unit Testing
-  - [ ] Realtor.com Listing Details Parsing
-    - [ ] Property Sale Listing
-      - [ ] Implementation
-      - [ ] Manual Testing
-      - [ ] Unit Testing
-    - [ ] Property Rental Listing
-      - [ ] Implementation
-      - [ ] Manual Testing
-      - [ ] Unit Testing
+  - [ ] Property Sale Listing
+    - [x] Implementation
+    - [ ] Manual Testing
+    - [ ] Unit Testing
+  - [ ] Property Rental Listing
+    - [ ] Implementation
+    - [ ] Manual Testing
+    - [ ] Unit Testing
 - [ ] LandWatch
   - [ ] LandWatch search Query
     - [ ] Implementation
