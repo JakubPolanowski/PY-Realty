@@ -1,5 +1,5 @@
 import requests
-from typing import List, Literal, Set
+from typing import List, Literal, Set, Dict, Any
 from . import defaults
 import re
 
@@ -543,6 +543,48 @@ class Query:
             self.set_keywords(x)
 
         return self
+
+    def get_response(self, headers: Dict = defaults.HEADER) -> requests.Response:
+        """Gets the GET request response for the Landwatch API given filter parameters
+
+        Args:
+            headers (Dict, optional): The request headers. Incorrect headers may lead to the Landwatch PUBLIC api blocking the request. Defaults to defaults.HEADER.
+
+        Returns:
+            requests.Response: GET request response object
+        """
+
+        return requests.get(
+            self.create_url(),
+            headers=headers
+        )
+
+    def get_results(self, returns: Literal["full", "results"] = "results", headers: Dict = defaults.HEADER) -> Dict[str, Any]:
+        """Gets the results from the GET request to the PUBLIC Landwatch API given filter parameters.
+
+        Args:
+            returns (Literal[&quot;full&quot;, &quot;results&quot;], optional): What it should return, either the 'full' json content of the response or 'results' - the part that pertains to the search results. Defaults to "results".
+            headers (Dict, optional): The request headers. Incorrect headers may lead to the Landwatch PUBLIC api blocking the request. Defaults to defaults.HEADER.
+
+        Raises:
+            ValueError: Invalid returns parameter value
+
+        Returns:
+            Dict[str, Any]: The response data
+        """
+
+        data = self.get_response(headers).json()
+
+        if returns == 'full':
+            return data
+        elif returns == 'results':
+            return data['searchResults']
+        else:
+            raise ValueError(
+                f'Invalid returns value "{returns}", valid options are "full" and "results"')
+
+    def get_filter_options(self, headers: Dict = defaults.HEADER) -> Dict[str, Any]:
+        ...  # TODO
 
 
 class Query_Helpers:
