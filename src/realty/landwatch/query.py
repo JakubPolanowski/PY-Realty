@@ -8,6 +8,8 @@ class Query:
 
     def __init__(self) -> None:
 
+        self.page: int = 1
+
         self.state: str | None = None
         self.region: str | None = None
         self.county: str | None = None
@@ -156,9 +158,31 @@ class Query:
             url += '/owner-financing'
 
         if self.virtual_tour:
-            url += 'virtual-tour'
+            url += '/virtual-tour'
+
+        if self.page > 1:
+            url += f'/page-{self.page}'
 
         return url
+
+    def set_page(self, page: int) -> 'Query':
+        """Sets the page of the results
+
+        Args:
+            page (int): Page, must be 1 or greater
+
+        Raises:
+            ValueError: Page value less than 1
+
+        Returns:
+            Query: Returns self
+        """
+
+        if page < 1:
+            raise ValueError(f'page must be 1 or greater, was {page}')
+
+        self.page = page
+        return self
 
     def set_state(self, state: str) -> 'Query':
         """Sets the state for the filter.
@@ -494,6 +518,9 @@ class Query:
         Returns:
             Query: Returns self
         """
+
+        if x := kwargs.get('page'):
+            self.set_page(x)
 
         if x := kwargs.get('state'):
             self.set_state(x)
