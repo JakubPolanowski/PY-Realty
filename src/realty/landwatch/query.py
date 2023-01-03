@@ -6,6 +6,163 @@ import re
 
 class Query:
 
+    def __init__(self) -> None:
+
+        self.state: str | None = None
+        self.region: str | None = None
+        self.county: str | None = None
+        self.city: str | None = None
+
+        self.price_max: int | None = None
+        self.price_min: int | None = None
+
+        self.acres_max: int | None = None
+        self.acres_min: int | None = None
+
+        self.sqft_max: int | None = None
+        self.sqft_min: int | None = None
+
+        self.property_type: Set[Literal[
+            "Commerical",
+            "Farms and Ranches",
+            "Homesite",
+            "Horse",
+            "House",
+            "Hunting",
+            "Lakefront",
+            "Oceanfront",
+            "Recreational",
+            "Riverfront",
+            "Timberland",
+            "Undeveloped",
+            "Waterfront",
+        ]] | Literal[
+            "Commerical",
+            "Farms and Ranches",
+            "Homesite",
+            "Horse",
+            "House",
+            "Hunting",
+            "Lakefront",
+            "Oceanfront",
+            "Recreational",
+            "Riverfront",
+            "Timberland",
+            "Undeveloped",
+            "Waterfront",
+        ] | None = None
+
+        self.beds_max: int | None = None
+        self.beds_min: int | None = None
+
+        self.baths_max: int | None = None
+        self.baths_min: int | None = None
+
+        self.activity: Literal[
+            "boating",
+            "fishing",
+            "beach",
+            "horseback riding",
+            "rving",
+            "canoeing/kayaking",
+            "off-roading",
+            "camping",
+            "conservation",
+            "aviation",
+        ] | None = None
+
+        self.available = True
+        self.under_contract = False
+        self.off_market = False
+        self.sold = False
+
+        self.sale_type: Literal['sale', 'auction', 'both'] = 'sale'
+
+        self.owner_financing = False
+        self.mineral_rights = False
+        self.virtual_tour = False
+
+        self.keywords: List[str] = []
+
+    def create_url(self) -> str:
+        """Creates the Landwatch GET request URL based on the query attributes
+
+        Returns:
+            str: The Landwatch GET request URL
+        """
+
+        url = defaults.ROOT_URL
+
+        if self.state is None and self.property_type is None:
+            url += "/land"
+
+        if self.state is not None:
+            url += Query_Helpers.get_link_for_state(self.state)
+
+        if self.city is not None:
+            url += Query_Helpers.get_link_for_city(self.city)
+        elif self.county is not None:
+            url += Query_Helpers.get_link_for_county(self.county)
+        elif self.region is not None:
+            url += Query_Helpers.get_link_for_region(self.region)
+
+        if self.property_type is not None:
+            url += Query_Helpers.get_link_for_property(self.property_type)
+
+        if self.activity is not None:
+            url += Query_Helpers.get_link_for_activity(self.activity)
+
+        if self.price_min is not None or self.price_max is not None:
+            url += Query_Helpers.get_link_for_price(
+                self.price_min, self.price_max)
+
+        if self.acres_min is not None or self.acres_max is not None:
+            url += Query_Helpers.get_link_for_acres(
+                self.acres_min, self.acres_max)
+
+        if self.sqft_min is not None or self.sqft_max is not None:
+            url += Query_Helpers.get_link_for_sqft(
+                self.sqft_min, self.sqft_max)
+
+        if self.beds_min is not None or self.beds_max is not None:
+            url += Query_Helpers.get_link_for_beds(
+                self.beds_min, self.beds_max)
+
+        if self.baths_min is not None or self.baths_max is not None:
+            url += Query_Helpers.get_link_for_baths(
+                self.baths_min, self.baths_max)
+
+        if self.keywords:
+            url += Query_Helpers.get_link_for_keywords(self.keywords)
+
+        if self.available:
+            url += '/available'
+
+        if self.under_contract:
+            url += '/under-contract'
+
+        if self.off_market:
+            url += '/under-contract'
+
+        if self.sold:
+            url += '/sold'
+
+        url += Query_Helpers.get_link_for_sale_type(self.sale_type)
+
+        if self.mineral_rights:
+            url += '/mineral-rights'
+
+        if self.owner_financing:
+            url += '/owner-financing'
+
+        if self.virtual_tour:
+            url += 'virtual-tour'
+
+        return url
+
+
+class Query_Helpers:
+
     state_dict = {
         "texas": "/texas-land-for-sale",
         "florida": "/florida-land-for-sale",
@@ -104,155 +261,6 @@ class Query:
         "riverfront": 2048,
         "oceanfront": 1024,
     }
-
-    def __init__(self) -> None:
-
-        self.state: str | None = None
-        self.region: str | None = None
-        self.county: str | None = None
-        self.city: str | None = None
-
-        self.price_max: int | None = None
-        self.price_min: int | None = None
-
-        self.acres_max: int | None = None
-        self.acres_min: int | None = None
-
-        self.sqft_max: int | None = None
-        self.sqft_min: int | None = None
-
-        self.property_type: Set[Literal[
-            "Commerical",
-            "Farms and Ranches",
-            "Homesite",
-            "Horse",
-            "House",
-            "Hunting",
-            "Lakefront",
-            "Oceanfront",
-            "Recreational",
-            "Riverfront",
-            "Timberland",
-            "Undeveloped",
-            "Waterfront",
-        ]] | Literal[
-            "Commerical",
-            "Farms and Ranches",
-            "Homesite",
-            "Horse",
-            "House",
-            "Hunting",
-            "Lakefront",
-            "Oceanfront",
-            "Recreational",
-            "Riverfront",
-            "Timberland",
-            "Undeveloped",
-            "Waterfront",
-        ] | None = None
-
-        self.beds_max: int | None = None
-        self.beds_min: int | None = None
-
-        self.baths_max: int | None = None
-        self.baths_min: int | None = None
-
-        self.activity: Literal[
-            "boating",
-            "fishing",
-            "beach",
-            "horseback riding",
-            "rving",
-            "canoeing/kayaking",
-            "off-roading",
-            "camping",
-            "conservation",
-            "aviation",
-        ] | None = None
-
-        self.available = True
-        self.under_contract = False
-        self.off_market = False
-        self.sold = False
-
-        self.sale_type: Literal['sale', 'auction', 'both'] = 'sale'
-
-        self.owner_financing = False
-        self.mineral_rights = False
-        self.virtual_tour = False
-
-        self.keywords: List[str] = []
-
-    def create_url(self) -> str:
-        """Creates the Landwatch GET request URL based on the query attributes
-
-        Returns:
-            str: The Landwatch GET request URL
-        """
-
-        url = defaults.ROOT_URL
-
-        if self.state is None and self.property_type is None:
-            url += "/land"
-
-        if self.state is not None:
-            url += self.get_link_for_state(self.state)
-
-        if self.city is not None:
-            url += self.get_link_for_city(self.city)
-        elif self.county is not None:
-            url += self.get_link_for_county(self.county)
-        elif self.region is not None:
-            url += self.get_link_for_region(self.region)
-
-        if self.property_type is not None:
-            url += self.get_link_for_property(self.property_type)
-
-        if self.activity is not None:
-            url += self.get_link_for_activity(self.activity)
-
-        if self.price_min is not None or self.price_max is not None:
-            url += self.get_link_for_price(self.price_min, self.price_max)
-
-        if self.acres_min is not None or self.acres_max is not None:
-            url += self.get_link_for_acres(self.acres_min, self.acres_max)
-
-        if self.sqft_min is not None or self.sqft_max is not None:
-            url += self.get_link_for_sqft(self.sqft_min, self.sqft_max)
-
-        if self.beds_min is not None or self.beds_max is not None:
-            url += self.get_link_for_beds(self.beds_min, self.beds_max)
-
-        if self.baths_min is not None or self.baths_max is not None:
-            url += self.get_link_for_baths(self.baths_min, self.baths_max)
-
-        if self.keywords:
-            url += self.get_link_for_keywords(self.keywords)
-
-        if self.available:
-            url += '/available'
-
-        if self.under_contract:
-            url += '/under-contract'
-
-        if self.off_market:
-            url += '/under-contract'
-
-        if self.sold:
-            url += '/sold'
-
-        url += self.get_link_for_sale_type(self.sale_type)
-
-        if self.mineral_rights:
-            url += '/mineral-rights'
-
-        if self.owner_financing:
-            url += '/owner-financing'
-
-        if self.virtual_tour:
-            url += 'virtual-tour'
-
-        return url
 
     @classmethod
     def get_link_for_state(cls, state: str) -> str:
