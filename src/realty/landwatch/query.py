@@ -151,7 +151,12 @@ class Query:
 
         self.keywords: List[str] = []
 
-    def create_url(self):
+    def create_url(self) -> str:
+        """Creates the Landwatch GET request URL based on the query attributes
+
+        Returns:
+            str: The Landwatch GET request URL
+        """
 
         url = defaults.ROOT_URL
 
@@ -179,6 +184,43 @@ class Query:
 
         if self.acres_min is not None or self.acres_max is not None:
             url += self.get_link_for_acres(self.acres_min, self.acres_max)
+
+        if self.sqft_min is not None or self.sqft_max is not None:
+            url += self.get_link_for_sqft(self.sqft_min, self.sqft_max)
+
+        if self.beds_min is not None or self.beds_max is not None:
+            url += self.get_link_for_beds(self.beds_min, self.beds_max)
+
+        if self.baths_min is not None or self.baths_max is not None:
+            url += self.get_link_for_baths(self.baths_min, self.baths_max)
+
+        if self.keywords:
+            url += self.get_link_for_keywords(self.keywords)
+
+        if self.available:
+            url += '/available'
+
+        if self.under_contract:
+            url += '/under-contract'
+
+        if self.off_market:
+            url += '/under-contract'
+
+        if self.sold:
+            url += '/sold'
+
+        url += self.get_link_for_sale_type(self.sale_type)
+
+        if self.mineral_rights:
+            url += '/mineral-rights'
+
+        if self.owner_financing:
+            url += '/owner-financing'
+
+        if self.virtual_tour:
+            url += 'virtual-tour'
+
+        return url
 
     @classmethod
     def get_link_for_state(cls, state: str) -> str:
