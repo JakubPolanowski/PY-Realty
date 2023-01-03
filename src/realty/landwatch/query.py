@@ -611,7 +611,21 @@ class Query:
                 f'Invalid returns value "{returns}", valid options are "full" and "results"')
 
     def get_filter_options(self, headers: Dict = defaults.HEADER) -> Dict[str, Any]:
-        ...  # TODO
+        """Gets the potential filter options, such as possible states (or regions if state was set).
+
+        Args:
+            headers (Dict, optional): The request headers. Incorrect headers may lead to the Landwatch PUBLIC api blocking the request. Defaults to defaults.HEADER.
+
+        Returns:
+            Dict[str, Any]: Dictionary of filter options
+        """
+
+        data = self.get_results('full')
+        options = {}
+        for fs in data['filterSections']:
+            options[fs['section']] = fs['filterLinks']
+
+        return options
 
 
 class Query_Helpers:
