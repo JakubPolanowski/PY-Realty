@@ -50,11 +50,11 @@ Early development. The library is still in early development and is missing key 
 - [ ] LandWatch
   - [ ] LandWatch search Query
     - [x] Implementation
-    - [ ] Manual Testing
+    - [x] Manual Testing
     - [ ] Unit Testing
   - [ ] LandWatch Listing Details Parsing
-    - [ ] Implementation
-    - [ ] Manual Testing
+    - [x] Implementation
+    - [x] Manual Testing
     - [ ] Unit Testing
 - [ ] Apartments.com
   - [ ] Apartments.com Search Query 
