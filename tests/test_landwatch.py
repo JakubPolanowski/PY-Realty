@@ -52,3 +52,17 @@ class TestQuery:
         assert all([
             expected_keys - set(r.keys()) == set() for r in results
         ])
+
+
+class TestListingDetails:
+    @staticmethod
+    @pytest.fixture(scope="class")
+    def listing_subset(reasonable_results):
+        return [
+            Listing_Details(lr) for lr in reasonable_results[:3]
+        ]
+
+    @staticmethod
+    def test_init(listing_subset):
+        # just a basic check if init doesn't run into errors
+        listing_subset
