@@ -99,12 +99,12 @@ class Query:
         if self.state is not None:
             url += Query_Helpers.get_link_for_state(self.state)
 
-        if self.city is not None:
-            url += Query_Helpers.get_link_for_city(self.city)
-        elif self.county is not None:
-            url += Query_Helpers.get_link_for_county(self.county)
-        elif self.region is not None:
-            url += Query_Helpers.get_link_for_region(self.region)
+            if self.city is not None:
+                url += Query_Helpers.get_link_for_city(self.city)
+            elif self.county is not None:
+                url += Query_Helpers.get_link_for_county(self.county)
+            elif self.region is not None:
+                url += Query_Helpers.get_link_for_region(self.region)
 
         if self.property_type is not None:
             url += Query_Helpers.get_link_for_property(self.property_type)
