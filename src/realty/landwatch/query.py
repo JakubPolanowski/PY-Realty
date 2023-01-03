@@ -160,6 +160,110 @@ class Query:
 
         return url
 
+    def set_state(self, state: str) -> 'Query':
+        """Sets the state for the filter.
+
+        Args:
+            state (str): The state name
+
+        Raises:
+            ValueError: Invalid state name
+
+        Returns:
+            Query: Returns self
+        """
+
+        if state.lower() in Query_Helpers.state_dict:
+            self.state = state
+            return self
+        else:
+            raise ValueError(
+                f'Invalid state name "{state}", valid names are {", ".join(Query_Helpers.state_dict.keys())}')
+
+    def set_region(self, region: str) -> 'Query':
+        """Sets the region for the filter. Note for this to work, must have a state specified and the region must be valid for said state
+
+        Args:
+            region (str): Region name
+
+        Returns:
+            Query: Returns self
+        """
+
+        self.region = region
+        return self
+
+    def set_county(self, county: str) -> 'Query':
+        """Sets the county for the filter. Note for this to work, must have state specified and the county name must be valid for said state
+
+        Args:
+            county (str): County name
+
+        Returns:
+            Query: Returns self
+        """
+
+        self.county = county
+        return self
+
+    def set_city(self, city: str) -> 'Query':
+        """Sets the city for the filter. Note for this to work, must have state specified and the city name must be valid for said state
+
+        Args:
+            city (str): City name
+
+        Returns:
+            Query: Returns self
+        """
+
+        self.city = city
+        return self
+
+    def set_price(self, price_min: int | None = None, price_max: int | None = None) -> 'Query':
+        """Sets the price range for the filter
+
+        Args:
+            price_min (int | None, optional): Price min. If not specified, this end of the range will be left open. Defaults to None.
+            price_max (int | None, optional): Price max. If not specified, this end of the range will be left open. Defaults to None.
+
+        Returns:
+            Query: Returns self
+        """
+
+        self.price_max = price_max
+        self.price_min = price_min
+        return self
+
+    def set_acres(self, acres_min: int | None = None, acres_max: int | None = None) -> 'Query':
+        """Sets the acres (lot area) for the filter
+
+        Args:
+            acres_min (int | None, optional): Acres min. If not specified, this end of the range will be left open. Defaults to None.
+            acres_max (int | None, optional): Acres max. If not specified, this end of the range will be left open. Defaults to None.
+
+        Returns:
+            Query: Returns self
+        """
+
+        self.acres_max = acres_max
+        self.acres_min = acres_min
+        return self
+
+    def set_sqft(self, sqft_min: int | None = None, sqft_max: int | None = None) -> 'Query':
+        """Sets the sqft (interior area) for the filter
+
+        Args:
+            sqft_min (int | None, optional): Sqft min. If not specified, this end of the range will be left open. Defaults to None.
+            sqft_max (int | None, optional): Sqft max. If not specified, this end of the range will be left open. Defaults to None.
+
+        Returns:
+            Query: Returns self
+        """
+
+        self.sqft_max = sqft_max
+        self.sqft_min = sqft_min
+        return self
+
 
 class Query_Helpers:
 
