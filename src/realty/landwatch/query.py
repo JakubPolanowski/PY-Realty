@@ -60,6 +60,19 @@ class Query:
         "district of columbia": "/district-of-columbia-land-for-sale",
     }
 
+    activity_dict = {
+        "boating": "/boating-activity",
+        "fishing": "/fishing-activity",
+        "beach": "/beach-activity",
+        "horseback riding": "/horseback-riding-activity",
+        "rving": "/rving-activity",
+        "canoeing/kayaking": "/canoeing-kayaking-activity",
+        "off-roading": "/off-roading-activity",
+        "camping": "/camping-activity",
+        "conservation": "/conservation-activity",
+        "aviation": "/aviation-activity",
+    }
+
     def __init__(self) -> None:
 
         self.state: str | None = None
@@ -109,7 +122,18 @@ class Query:
         self.baths_max: int | None = None
         self.baths_min: int | None = None
 
-        self.activity: str | None = None
+        self.activity: Literal[
+            "boating",
+            "fishing",
+            "beach",
+            "horseback riding",
+            "rving",
+            "canoeing/kayaking",
+            "off-roading",
+            "camping",
+            "conservation",
+            "aviation",
+        ] | None = None
 
         self.available = True
         self.under_contract = False
@@ -281,9 +305,13 @@ class Query:
         else:
             return ''
 
-    @staticmethod
-    def get_link_for_activity(activity: str) -> str:
-        ...  # TODO
+    @classmethod
+    def get_link_for_activity(cls, activity: str) -> str:
+        try:
+            return cls.activity_dict[activity.lower()]
+        except KeyError:
+            raise ValueError(
+                f'{activity} is not a valid activity name, valid activity names are {", ".join(cls.activity_dict.keys())}')
 
     @staticmethod
     def get_link_for_sale_type(sale_type: Literal['sale', 'auction', 'both']) -> str:
