@@ -83,8 +83,11 @@ class Query:
         self.price_max: int | None = None
         self.price_min: int | None = None
 
-        self.size_max: int | None = None
-        self.size_min: int | None = None
+        self.acres_max: int | None = None
+        self.acres_min: int | None = None
+
+        self.sqft_max: int | None = None
+        self.sqft_min: int | None = None
 
         self.property_type: Set[Literal[
             "Commerical",
@@ -168,10 +171,28 @@ class Query:
         if self.property_type is not None:
             url += self.get_link_for_property(self.property_type)
 
-        # TODO remainder of filters
+        if self.activity is not None:
+            url += self.get_link_for_activity(self.activity)
+
+        if self.price_min is not None or self.price_max is not None:
+            url += self.get_link_for_price(self.price_min, self.price_max)
+
+        if self.acres_min is not None or self.acres_max is not None:
+            url += self.get_link_for_acres(self.acres_min, self.acres_max)
 
     @classmethod
     def get_link_for_state(cls, state: str) -> str:
+        """Gets the relative link for the filtering for the state
+
+        Args:
+            state (str): The state name
+
+        Raises:
+            ValueError: Invalid state name
+
+        Returns:
+            str: relative link
+        """
 
         try:
             return cls.state_dict[state.lower()]
@@ -246,22 +267,42 @@ class Query:
             return ''
 
     @staticmethod
-    def get_link_for_size(size_min: int | None = None, size_max: int | None = None) -> str:
+    def get_link_for_acres(acres_min: int | None = None, acres_max: int | None = None) -> str:
         """Gets the link for the lot size filter
 
         Args:
-            size_min (int | None, optional): Size min in Acres. Defaults to None.
-            size_max (int | None, optional): Size max in acres. Defaults to None.
+            acres_min (int | None, optional): Lot size area in Acres. Defaults to None.
+            acres_max (int | None, optional): Lot size area in acres. Defaults to None.
 
         Returns:
             str: The link for the size filter
         """
-        if size_max is not None and size_min is not None:
-            return f'/acres-{size_min}-{size_max}'
-        elif size_max is not None:
-            return f'/acres-under-{size_max}'
-        elif size_min is not None:
-            return f'/acres-over-{size_min}'
+        if acres_max is not None and acres_min is not None:
+            return f'/acres-{acres_min}-{acres_max}'
+        elif acres_max is not None:
+            return f'/acres-under-{acres_max}'
+        elif acres_min is not None:
+            return f'/acres-over-{acres_min}'
+        else:
+            return ''
+
+    @staticmethod
+    def get_link_for_sqft(sqft_min: int | None = None, sqft_max: int | None = None) -> str:
+        """Gets the link for the lot size filter
+
+        Args:
+            sqft_min (int | None, optional): Interior area min in sqft. Defaults to None.
+            sqft_max (int | None, optional): Interior area max in sqft. Defaults to None.
+
+        Returns:
+            str: The link for the size filter
+        """
+        if sqft_max is not None and sqft_min is not None:
+            return f'/sqft-{sqft_min}-{sqft_max}'
+        elif sqft_max is not None:
+            return f'/sqft-under-{sqft_max}'
+        elif sqft_min is not None:
+            return f'/sqft-over-{sqft_min}'
         else:
             return ''
 
@@ -307,6 +348,17 @@ class Query:
 
     @classmethod
     def get_link_for_activity(cls, activity: str) -> str:
+        """Gets the relative link for filtering based on the specified activity
+
+        Args:
+            activity (str): activity
+
+        Raises:
+            ValueError: Invalid activity name
+
+        Returns:
+            str: relative link
+        """
         try:
             return cls.activity_dict[activity.lower()]
         except KeyError:
