@@ -73,6 +73,38 @@ class Query:
         "aviation": "/aviation-activity",
     }
 
+    property_type_dict = {
+        "house": "/homes",
+        "undeveloped": "/undeveloped-land",
+        "homesite": "/homesites",
+        "waterfront": "/waterfront-property",
+        "lakefront": "/lakefront-property",
+        "commercial": "/commercial-property",
+        "recreational": "/recreational-property",
+        "farms and ranches": "/farms-ranches",
+        "hunting": "/hunting-property",
+        "timberland": "/timberland-property",
+        "horse": "/horse-property",
+        "riverfront": "/riverfront-property",
+        "oceanfront": "/oceanfront-property",
+    }
+
+    property_type_id_dict = {
+        "house": 8192,
+        "undeveloped": 32,
+        "homesite": 4096,
+        "waterfront": 3584,
+        "lakefront": 512,
+        "commercial": 64,
+        "recreational": 4,
+        "farms and ranches": 3,
+        "hunting": 128,
+        "timberland": 16,
+        "horse": 256,
+        "riverfront": 2048,
+        "oceanfront": 1024,
+    }
+
     def __init__(self) -> None:
 
         self.state: str | None = None
@@ -242,10 +274,47 @@ class Query:
             raise ValueError(
                 f'{state} is not a valid state name, valid state names are {", ".join(cls.state_dict.keys())}')
 
-    @staticmethod
-    def get_link_for_property(propety: Set[str] | str) -> str:
+    @classmethod
+    def get_link_for_property(cls, property_type: Set[str] | str) -> str:
+        """Gets the link for the property type filter
 
-        raise NotImplemented  # TODO
+        Args:
+            property_type (Set[str] | str): Either a single property type as a string or a set of property type strings
+
+        Raises:
+            ValueError: Not a valid property type
+            TypeError: property_type is neither a str or a set
+
+        Returns:
+            str: _description_
+        """
+
+        if isinstance(property_type, str):
+            try:
+                return cls.property_type_dict[property_type.lower()]
+            except KeyError:
+                raise ValueError(
+                    f'{property_type} is not a valid propety type, valid propety types are {", ".join(cls.property_type_dict.keys())}')
+
+        elif isinstance(property_type, set):
+
+            id_sum = 0
+
+            for pt in property_type:
+                try:
+                    id_sum += cls.property_type_id_dict[pt]
+                except KeyError:
+                    raise ValueError(
+                        f'{pt} is not a valid propety type, valid propety types are {", ".join(cls.property_type_dict.keys())}')
+
+            if id_sum > 0:
+                return f'/prop-types-{id_sum}'
+            else:
+                return ''
+
+        else:
+            raise TypeError(
+                f'property_type parameter is an invalid type {type(property_type)}. Must be either a str or a Set[str]')
 
     @staticmethod
     def get_link_for_region(region: str) -> str:
