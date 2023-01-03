@@ -328,6 +328,86 @@ class Query:
             raise TypeError(
                 f'property_type should either be a str or a Set[str], was {type(property_type)}')
 
+    def set_beds(self, beds_min: int | None = None, beds_max: int | None = None) -> 'Query':
+        """Sets the beds range for the filter
+
+        Args:
+            beds_min (int | None, optional): Beds min. If not specified, this end of the range will be left open. Defaults to None.
+            beds_max (int | None, optional): Beds max. If not specified, this end of the range will be left open. Defaults to None.
+
+        Returns:
+            Query: Returns self
+        """
+
+        self.beds_max = beds_max
+        self.beds_min = beds_min
+        return self
+
+    def set_baths(self, baths_min: int | None = None, baths_max: int | None = None) -> 'Query':
+        """Sets the baths range for the filter
+
+        Args:
+            baths_min (int | None, optional): Baths min. If not specified, this end of the range will be left open. Defaults to None.
+            baths_max (int | None, optional): Baths max. If not specified, this end of the range will be left open. Defaults to None.
+
+        Returns:
+            Query: Returns self
+        """
+
+        self.baths_max = baths_max
+        self.baths_min = baths_min
+        return self
+
+    def set_activity(self, activity: Literal[
+        "boating",
+        "fishing",
+        "beach",
+        "horseback riding",
+        "rving",
+        "canoeing/kayaking",
+        "off-roading",
+        "camping",
+        "conservation",
+        "aviation",
+    ]) -> 'Query':
+        """Sets the activity for the filter
+
+        Args:
+            activity (Literal[ &quot;boating&quot;, &quot;fishing&quot;, &quot;beach&quot;, &quot;horseback riding&quot;, &quot;rving&quot;, &quot;canoeing): Activity
+
+        Raises:
+            ValueError: Invalid activity
+
+        Returns:
+            Query: Returns self
+        """
+
+        if activity not in Query_Helpers.activity_dict:
+            raise ValueError(
+                f'Invalid activity "{activity}", valid activities are {", ".join(Query_Helpers.activity_dict.keys())}')
+
+        self.activity = activity
+        return self
+
+    def set_status(self, available=True, under_contract=False, off_market=False, sold=False) -> 'Query':
+        """Sets the status of the property filter
+
+        Args:
+            available (bool, optional): If available. Defaults to True.
+            under_contract (bool, optional): If under contract. Defaults to False.
+            off_market (bool, optional): If off market. Defaults to False.
+            sold (bool, optional): If sold. Defaults to False.
+
+        Returns:
+            Query: Returns self
+        """
+
+        self.available = available
+        self.under_contract = under_contract
+        self.off_market = off_market
+        self.sold = sold
+        return self
+
 
 class Query_Helpers:
 
