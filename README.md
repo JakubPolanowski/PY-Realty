@@ -47,12 +47,12 @@ Early development. The library is still in early development and is missing key 
     - [ ] Implementation
     - [ ] Manual Testing
     - [ ] Unit Testing
-- [ ] LandWatch
-  - [ ] LandWatch search Query
+- [x] LandWatch
+  - [x] LandWatch search Query
     - [x] Implementation
     - [x] Manual Testing
     - [ ] Unit Testing
-  - [ ] LandWatch Listing Details Parsing
+  - [x] LandWatch Listing Details Parsing
     - [x] Implementation
     - [x] Manual Testing
     - [ ] Unit Testing
