@@ -408,6 +408,86 @@ class Query:
         self.sold = sold
         return self
 
+    def set_sale_type(self, sale_type: Literal['sale', 'auction', 'both']) -> 'Query':
+        """Sets the sale type for the filter
+
+        Args:
+            sale_type (Literal[&#39;sale&#39;, &#39;auction&#39;, &#39;both&#39;]): The sale type
+
+        Raises:
+            ValueError: Invalid sales type
+
+        Returns:
+            Query: Returns self
+        """
+
+        valid = ['sale', 'auction', 'both']
+        if sale_type not in valid:
+            raise ValueError(
+                f'Invalid sale type "{sale_type}", valid types are {", ".join(valid)}')
+
+        self.sale_type = sale_type
+        return self
+
+    def set_owner_financing(self, owner_financing: bool) -> 'Query':
+        """Sets if the owner is financing for the filter
+
+        Args:
+            owner_financing (bool): Owner financing
+
+        Returns:
+            Query: Returns self
+        """
+
+        self.owner_financing = owner_financing
+        return self
+
+    def set_mineral_rights(self, mineral_rights: bool) -> 'Query':
+        """Sets if mineral rights are part of the property for the filter
+
+        Args:
+            mineral_rights (bool): Mineral rights
+
+        Returns:
+            Query: Returns self
+        """
+
+        self.mineral_rights = mineral_rights
+        return self
+
+    def set_virtual_tour(self, virtual_tour: bool) -> 'Query':
+        """Sets if there is a virtual tour for the property for the filter
+
+        Args:
+            virtual_tour (bool): Virtual tour
+
+        Returns:
+            Query: Returns self
+        """
+
+        self.virtual_tour = virtual_tour
+        return self
+
+    def set_keywords(self, keywords: List[str]) -> 'Query':
+        """Sets the keywords for the filter
+
+        Args:
+            keywords (List[str]): List of keywords. These must be alphanumeric with no spaces.
+
+        Raises:
+            ValueError: Invalid format for keyword
+
+        Returns:
+            Query: Returns self
+        """
+
+        for keyword in keywords:
+            if not re.match(r'[A-Za-z0-9]+', keyword):
+                raise ValueError(
+                    f'Keywords must be alphanumeric with no spaces or symbols, keyword "{keyword}" was not')
+
+        self.keywords = keywords
+
 
 class Query_Helpers:
 
