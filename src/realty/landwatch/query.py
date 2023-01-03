@@ -488,6 +488,62 @@ class Query:
 
         self.keywords = keywords
 
+    def set_all(self, **kwargs) -> 'Query':
+        """Meta setter function that can set all attributes
+
+        Returns:
+            Query: Returns self
+        """
+
+        if x := kwargs.get('state'):
+            self.set_state(x)
+
+        if x := kwargs.get('region'):
+            self.set_region(x)
+
+        if x := kwargs.get('county'):
+            self.set_county(x)
+
+        if x := kwargs.get('city'):
+            self.set_city(x)
+
+        self.set_price(kwargs.get('price_min'), kwargs.get('price_max'))
+        self.set_acres(kwargs.get('acres_min'), kwargs.get('acres_max'))
+        self.set_sqft(kwargs.get('sqft_min'), kwargs.get('sqft_max'))
+
+        if x := kwargs.get('property_type'):
+            self.set_property_type(x)
+
+        self.set_beds(kwargs.get('beds_min'), kwargs.get('beds_max'))
+        self.set_baths(kwargs.get('baths_min'), kwargs.get('baths_max'))
+
+        if x := kwargs.get('activity'):
+            self.set_activity(x)
+
+        self.set_status(
+            kwargs.get('available', True),
+            kwargs.get('under_contract', False),
+            kwargs.get('off_market', False),
+            kwargs.get('sold', False)
+        )
+
+        if x := kwargs.get('sale_type'):
+            self.set_sale_type(x)
+
+        if x := kwargs.get('owner_financing'):
+            self.set_owner_financing(x)
+
+        if x := kwargs.get('mineral_rights'):
+            self.set_mineral_rights(x)
+
+        if x := kwargs.get('virtual_tour'):
+            self.set_virtual_tour(x)
+
+        if x := kwargs.get('keywords'):
+            self.set_keywords(x)
+
+        return self
+
 
 class Query_Helpers:
 
