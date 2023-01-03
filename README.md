@@ -49,7 +49,7 @@ Early development. The library is still in early development and is missing key 
     - [ ] Unit Testing
 - [ ] LandWatch
   - [ ] LandWatch search Query
-    - [ ] Implementation
+    - [x] Implementation
     - [ ] Manual Testing
     - [ ] Unit Testing
   - [ ] LandWatch Listing Details Parsing
