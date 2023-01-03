@@ -264,6 +264,70 @@ class Query:
         self.sqft_min = sqft_min
         return self
 
+    def set_property_type(self, property_type: Set[Literal[
+            "Commerical",
+            "Farms and Ranches",
+            "Homesite",
+            "Horse",
+            "House",
+            "Hunting",
+            "Lakefront",
+            "Oceanfront",
+            "Recreational",
+            "Riverfront",
+            "Timberland",
+            "Undeveloped",
+            "Waterfront",
+        ]] | Literal[
+            "Commerical",
+            "Farms and Ranches",
+            "Homesite",
+            "Horse",
+            "House",
+            "Hunting",
+            "Lakefront",
+            "Oceanfront",
+            "Recreational",
+            "Riverfront",
+            "Timberland",
+            "Undeveloped",
+            "Waterfront",
+    ]) -> 'Query':
+        """Sets the property_type for the filter
+
+        Args:
+            property_type (Set[Literal[ &quot;Commerical&quot;, &quot;Farms and Ranches&quot;, &quot;Homesite&quot;, &quot;Horse&quot;, &quot;House&quot;, &quot;Hunting&quot;, &quot;Lakefront&quot;, &quot;Oceanfront&quot;, &quot;Recreational&quot;, &quot;Riverfront&quot;, &quot;Timberland&quot;, &quot;Undeveloped&quot;, &quot;Waterfront&quot;, ]] | Literal[ &quot;Commerical&quot;, &quot;Farms and Ranches&quot;, &quot;Homesite&quot;, &quot;Horse&quot;, &quot;House&quot;, &quot;Hunting&quot;, &quot;Lakefront&quot;, &quot;Oceanfront&quot;, &quot;Recreational&quot;, &quot;Riverfront&quot;, &quot;Timberland&quot;, &quot;Undeveloped&quot;, &quot;Waterfront&quot;, ]): The property type(s) either a single type given as a string or a set given as a set of strings.
+
+        Raises:
+            ValueError: Invalid property_type
+            TypeError: Invalid property_type type given
+
+        Returns:
+            Query: Returns self
+        """
+
+        if isinstance(property_type, str):
+            if property_type not in Query_Helpers.property_type_dict:
+                raise ValueError(
+                    f'Invalid property_type "{property_type}", valid property types are {", ".join(Query_Helpers.property_type_dict.keys())}')
+
+            self.property_type = property_type
+            return self
+
+        elif isinstance(property_type, set):
+            diff = property_type - set(Query_Helpers.property_type_dict.keys())
+            if diff != set():
+                raise ValueError(
+                    f'Invalid property_types {", ".join(diff)}, valid property types are {", ".join(Query_Helpers.property_type_dict.keys())}'
+                )
+
+            self.property_type = property_type
+            return self
+
+        else:
+            raise TypeError(
+                f'property_type should either be a str or a Set[str], was {type(property_type)}')
+
 
 class Query_Helpers:
 
