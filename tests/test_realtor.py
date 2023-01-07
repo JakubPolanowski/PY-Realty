@@ -126,4 +126,5 @@ class TestSales:
     def test_get_homes_in_area_with_price(sale_subset):
         p: Sale
         for p in sale_subset:
-            assert isinstance(p.get_homes_in_area_with_price(p.zip, p.price*.8, p.price*1.2), dict)
+            assert isinstance(p.get_homes_in_area_with_price(
+                p.zip, p.price*.8, p.price*1.2), dict)
