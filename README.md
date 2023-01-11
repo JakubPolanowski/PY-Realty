@@ -8,7 +8,11 @@ That being said scrapping large number of listings with no delays may result in 
 
 ## Status
 
-Early development. The library is still in early development and is missing key features and may not working entirely as expected.
+**VERSION:** 0.1.0
+
+Early development. The library is still in early development and is missing key features and may not be working entirely as expected.
+
+This library is now somewhat usable (mileage may vary) and can be installed (and built) via pip, see installation instructions below.
 
 ## Road Map
 
@@ -70,15 +74,11 @@ Early development. The library is still in early development and is missing key 
 
 Due to the nature of the data, it is impractical to have Unit tests check if data is extracted correctly. If testing against a source of Truth, say a listing, that listing may change over time. Additionally even though Zillow and Realtor.com may have similar data, if there is a mismatch it does not necessarily mean that scraping is done incorrectly, could just be a mismatch between the two websites. 
 
-Therefore Unit tests will check against unexpected behavior as opposed to extraction correctness. This meaning that they will check against exceptions and check if value types are correct.
+Therefore Unit tests will check against unexpected behavior as opposed to extraction correctness. This meaning that they will check against exceptions and check if value types are correct. That being said the Unit Test criteria still needs to ensure reasonable robustness. 
 
 ## Usage
 
 More detailed documentation will follow as development continues. However attributes and functions are well documented withing class and function doc-strings. 
-
-Currently only Zillow scraping in implemented. 
-
-Check back soon for more information.
 
 ### Zillow
 
@@ -88,4 +88,5 @@ The search results can then be scraped via the functions `details.crapes_listing
 
 ## Installation
 
-Installation and package setup currently not implemented 
+1. Clone this repository 
+2. Within the repository folder, run `pip install .`
