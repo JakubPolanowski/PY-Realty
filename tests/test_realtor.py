@@ -7,7 +7,7 @@ from src.realty.realtor.details import Sale
 def reasonable_sale_query():
     q = Sale_Query()
     q.set_filter_query_preset(
-        search_location="Chattanooga, TN"
+        search_location="Dallas, TX"
     )
     return q.get_request()
 
@@ -16,7 +16,7 @@ def reasonable_sale_query():
 def reasonable_sale_results():
     q = Sale_Query()
     q.set_filter_query_preset(
-        search_location="Chattanooga, TN"
+        search_location="Dallas, TX"
     )
     return q.get_response('results')
 

@@ -14,8 +14,8 @@ def reasonable_query():
     q = Query()
 
     q.set_page(1) \
-        .set_search_term("Chattanooga, TN") \
-        .set_map_bounds(west=-85.58309022900734, east=-85.18483583447609, south=34.73748469750508, north=35.40678434232889)
+        .set_search_term("Columbus, OH") \
+        .set_map_bounds(west=-83.33248072216797, east=-83.33248072216797, south=39.66914522069816, north=40.29576580257015)
     return q.get_response("request")
 
 
@@ -24,8 +24,8 @@ def reasonable_sale_results():
     q = Query()
 
     q.set_page(1) \
-        .set_search_term("Chattanooga, TN") \
-        .set_map_bounds(west=-85.58309022900734, east=-85.18483583447609, south=34.73748469750508, north=35.40678434232889)
+        .set_search_term("Columbus, OH") \
+        .set_map_bounds(west=-83.33248072216797, east=-83.33248072216797, south=39.66914522069816, north=40.29576580257015)
     return q.get_response("results")
 
 
@@ -33,8 +33,8 @@ def reasonable_sale_results():
 def reasonable_rental_home_results():
     q = Query()
     q.set_page(1) \
-        .set_search_term("Chattanooga, TN") \
-        .set_map_bounds(west=-85.58309022900734, east=-85.18483583447609, south=34.73748469750508, north=35.40678434232889) \
+        .set_search_term("Columbus, OH") \
+        .set_map_bounds(west=-83.33248072216797, east=-83.33248072216797, south=39.66914522069816, north=40.29576580257015) \
         .set_filter_preset(for_sale=False, home_type={"SingleFamily"})
     r = q.get_response(returns='results')
     return [x for x in r if "homedetails" in x['detailUrl']]
@@ -44,8 +44,8 @@ def reasonable_rental_home_results():
 def reasonable_rental_apartment_results():
     q = Query()
     q.set_page(1) \
-        .set_search_term("Chattanooga, TN") \
-        .set_map_bounds(west=-85.58309022900734, east=-85.18483583447609, south=34.73748469750508, north=35.40678434232889) \
+        .set_search_term("Columbus, OH") \
+        .set_map_bounds(west=-83.33248072216797, east=-83.33248072216797, south=39.66914522069816, north=40.29576580257015) \
         .set_filter_preset(for_sale=False, home_type={"Apartment"})
     r = q.get_response(returns='results')
     return [x for x in r if "/b/" in x['detailUrl']]
