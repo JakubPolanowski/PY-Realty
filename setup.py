@@ -16,7 +16,8 @@ setup(
     author='Jakub Polanowski',
     url='https://github.com/JakubPolanowski/PY-Realty',
     python_requires=">=3.10, <4",
-    packages=find_packages(include=['src/realty']),
+    packages=find_packages(where='src'),
+    package_dir={'': 'src'},
     install_requires=[
         "beautifulsoup4>=4.11.1",
         "numpy>=1.24.0",
